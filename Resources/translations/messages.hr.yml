@@ -1,0 +1,47 @@
+webburza:
+    sylius:
+        wishlist:
+            backend:
+                wishlists: Popisi želja
+                no_wishlist_items: Ovaj popis želja nema stavki.
+            frontend:
+                wishlist: Popis želja
+                wishlists: Popisi želja
+                my_wishlist: Moj popis želja
+                my_wishlists: Moji popisi želja
+                not_public: Ovaj popis želja nije javan.
+                not_public_notice: Ovaj popis želja nije javan, vidljiv je samo vama.
+                no_wishlist_items: Ovaj popis želja nema stavki.
+            breadcrumb:
+                index: Popisi želja
+            index_header: Popisi želja
+            create_header: Novi popis želja
+            update_header: Uređivanje želja
+            show_header: Detalji popisa želja
+            create: Nov popis želja
+            open: Otvori
+            no_results: Nije pronađen niti jedan popis želja.
+            general_info: Općenite informacije
+            wishlist_items: Stavke popisa želja
+            default_title: Popis želja
+            add_to_wishlist: Dodaj na popis želja
+            remove_from_wishlist: Ukloni sa popisa
+            clear: Ukloni sve stavke
+            label:
+                id: '#ID'
+                title: Naziv
+                description: Opis
+                public: Javno?
+                created_at: Datum kreiranja
+                updated_at: Datum ažuriranja
+                customer: Kupac
+
+            # Main frontend template checks for flashes
+            # in this file, not the separate flashes file
+
+            created: Popis želja uspješno kreiran.
+            updated: Popis želja uspješno ažuriran.
+            deleted: Popis želja uspješno izbrisan.
+            item_removed: Stavka je uspješno uklonjena.
+            item_added: Stavka je dodana na popis želja.
+            cleared: Sve stavke su uklonjene.

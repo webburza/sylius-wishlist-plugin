@@ -1,0 +1,33 @@
+# ------------------------------------------------------------------------------
+#  ACCOUNT
+# ------------------------------------------------------------------------------
+
+webburza_wishlist_account_edit:
+    path: /{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: webburza.account_controller.wishlist:updateAction
+
+webburza_wishlist_account_update:
+    path: /{id}
+    methods: [PUT]
+    defaults:
+        _controller: webburza.account_controller.wishlist:updateAction
+
+webburza_wishlist_account_index:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: webburza.account_controller.wishlist:indexAction
+
+webburza_wishlist_account_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: webburza.account_controller.wishlist:createAction
+
+webburza_wishlist_account_delete:
+    path: /{id}
+    methods: [DELETE]
+    defaults:
+        _controller: webburza.account_controller.wishlist:deleteAction

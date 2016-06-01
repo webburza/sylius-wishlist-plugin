@@ -1,0 +1,48 @@
+{% import 'SyliusWebBundle:Frontend/Macros:buttons.html.twig' as buttons %}
+{% extends 'SyliusWebBundle:Frontend/Account:layout.html.twig' %}
+
+{% block content %}
+    <h4>{{ 'webburza.sylius.wishlist.frontend.wishlists'|trans }}</h4>
+
+    <div class="row">
+        {% if wishlists is not empty %}
+            <table id="wishlists" class="table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Is Public</th>
+                    <th>Controls</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for wishlist in wishlists %}
+                    <tr id="{{ wishlist.id }}">
+                        <td>
+                            <a href="{{ path('webburza_wishlist_frontend_show', {slug: wishlist.slug}) }}">
+                                {{ wishlist.title }}
+                            </a>
+                        </td>
+                        <td>
+                            {% if wishlist.public %}
+                                <span class="glyphicon glyphicon-ok"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove"></span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ buttons.edit(path('webburza_wishlist_account_edit', {'id': wishlist.id})) }}
+
+                            {% if wishlists | length > 1 %}
+                                {{ buttons.delete(path('webburza_wishlist_account_delete', {'id': wishlist.id})) }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>{{ 'webburza.sylius.wishlist.no_result'|trans }}</p>
+        {% endif %}
+        <p>{{ buttons.create(path('webburza_wishlist_account_create'), 'webburza.sylius.wishlist.create') }}</p>
+    </div>
+{% endblock %}

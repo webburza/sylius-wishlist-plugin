@@ -1,0 +1,13 @@
+{% from 'SyliusWebBundle:Frontend/Macros:actions.html.twig' import create %}
+{% extends 'SyliusWebBundle:Frontend/Account:layout.html.twig' %}
+
+{% block content %}
+    <h4>{{ 'webburza.sylius.wishlist.create_header'|trans }}</h4>
+
+    <div class="row">
+        <form action="{{ path('webburza_wishlist_account_create') }}" method="post" class="form-horizontal" novalidate>
+            {{ form_rest(form) }}
+            {{ create(path('webburza_wishlist_account_index')) }}
+        </form>
+    </div>
+{% endblock %}

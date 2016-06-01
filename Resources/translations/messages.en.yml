@@ -1,0 +1,47 @@
+webburza:
+    sylius:
+        wishlist:
+            backend:
+                wishlists: Wishlists
+                no_wishlist_items: This wishlist has no items.
+            frontend:
+                wishlist: Wishlist
+                wishlists: Wishlists
+                my_wishlist: My Wishlist
+                my_wishlists: My Wishlists
+                not_public: This wishlist is not public.
+                not_public_notice: This wishlist is not public. It's visible only to you.
+                no_wishlist_items: This wishlist has no items.
+            breadcrumb:
+                index: Wishlists
+            index_header: Wishlists
+            create_header: New wishlist
+            update_header: Editing wishlist
+            show_header: Wishlist details
+            create: Create wishlist
+            open: Open
+            no_results: No wishlists found.
+            general_info: General info
+            wishlist_items: Wishlist Items
+            default_title: Wishlist
+            add_to_wishlist: Add to wishlist
+            remove_from_wishlist: Remove from wishlist
+            clear: Clear all items
+            label:
+                id: '#ID'
+                title: Title
+                description: Description
+                public: Public?
+                created_at: Created At
+                updated_at: Updated At
+                customer: Customer
+
+            # Main frontend template checks for flashes
+            # in this file, not the separate flashes file
+
+            created: Wishlist created successfully.
+            updated: Wishlist updated successfully.
+            deleted: Wishlist deleted successfully.
+            item_removed: Item removed successfully.
+            item_added: Item added to wishlist.
+            cleared: Wishlist has been cleared.

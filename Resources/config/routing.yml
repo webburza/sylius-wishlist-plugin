@@ -1,0 +1,20 @@
+# ------------------------------------------------------------------------------
+#  BACKEND
+# ------------------------------------------------------------------------------
+
+webburza_wishlist:
+    resource: |
+        alias: webburza.wishlist
+        templates: WebburzaSyliusWishlistBundle:Backend/Wishlist
+        except: ['index']
+    type: sylius.resource
+    prefix: /administration
+
+webburza_wishlist_index:
+    path: /administration/wishlists/
+    methods: [GET]
+    defaults:
+        _controller: webburza.controller.wishlist:indexAction
+        _sylius:
+            template: WebburzaSyliusWishlistBundle:Backend/Wishlist:index.html.twig
+            sortable: true

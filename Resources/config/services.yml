@@ -1,0 +1,66 @@
+services:
+    webburza.sylius.wishlist.listener.menu_builder:
+        class: Webburza\Sylius\WishlistBundle\EventListener\MenuBuilderListener
+        arguments: [@translator]
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu_builder.backend.sidebar, method: addBackendMenuItems }
+
+    webburza.sylius.wishlist.listener.front_menu_builder:
+        class: Webburza\Sylius\WishlistBundle\EventListener\FrontendMenuBuilderListener
+        arguments:
+            - @translator
+            - @security.context
+            - @webburza.repository.wishlist
+            - %webburza.sylius.wishlist_bundle.multiple%
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu_builder.frontend.main, method: addFrontendMenuItems }
+            - { name: kernel.event_listener, event: sylius.menu_builder.frontend.account, method: addAccountMenuItems }
+
+    webburza.sylius.wishlist.listener.wishlist:
+        class: Webburza\Sylius\WishlistBundle\EventListener\WishlistListener
+        arguments: [@translator, @service_container]
+        tags:
+            - { name: kernel.event_listener, event: webburza.wishlist.pre_delete, method: preRemove }
+
+    webburza.sylius.wishlist.listener.customer:
+        class: Webburza\Sylius\WishlistBundle\EventListener\CustomerListener
+        arguments: [@translator, @service_container]
+        tags:
+            - { name: kernel.event_listener, event: sylius.customer.post_create, method: postCreate }
+            - { name: kernel.event_listener, event: sylius.customer.post_delete, method: postDelete }
+
+    webburza.factory.wishlist:
+        class: %webburza.factory.wishlist.class%
+        arguments: [%webburza.model.wishlist.class%, @translator, %webburza.sylius.wishlist_bundle.default_public%]
+
+    webburza.front_controller.wishlist:
+        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\WishlistController
+        arguments: [@service_container]
+
+    webburza.front_controller.wishlist_item:
+        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\WishlistItemController
+        arguments: [@service_container]
+
+    webburza.account_controller.wishlist:
+        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\Account\WishlistController
+        arguments: [@service_container]
+
+    webburza.form.type.base_wishlist:
+        class: Webburza\Sylius\WishlistBundle\Form\Type\BaseWishlistType
+        tags:
+            - { name: form.type, alias: webburza_base_wishlist }
+        arguments: [%webburza.model.wishlist.class%]
+
+    wishlist_provider:
+        class: Webburza\Sylius\WishlistBundle\Model\WishlistProvider
+        arguments:
+            - @security.context
+            - @webburza.repository.wishlist
+
+    webburza.wishlist_cart_resolver:
+            class: Webburza\Sylius\WishlistBundle\Model\ItemResolver
+            arguments:
+                - @sylius.factory.cart_item
+                - @sylius.repository.product
+                - @form.factory
+                - @sylius.context.channel

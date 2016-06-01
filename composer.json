@@ -1,0 +1,28 @@
+{
+    "name": "webburza/sylius-wishlist-bundle",
+    "description": "Wishlist bundle for Sylius e-commerce platform.",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": [
+        "webburza",
+        "web.burza",
+        "symfony",
+        "sylius",
+        "wishlist"
+    ],
+    "authors": [
+        {
+            "name": "Yousef Chanan",
+            "email": "yousef@burza.hr"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Webburza\\Sylius\\WishlistBundle\\": "" }
+    },
+    "require": {
+        "sylius/core": "^0.17"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8"
+    }
+}

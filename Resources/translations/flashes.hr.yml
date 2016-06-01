@@ -1,0 +1,4 @@
+webburza:
+    sylius:
+        wishlist:
+            cannot_delete: Kupac mora imati barem jedan popis želja.

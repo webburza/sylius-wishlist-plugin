@@ -1,0 +1,36 @@
+# ------------------------------------------------------------------------------
+#  FRONTEND
+# ------------------------------------------------------------------------------
+
+# Show the first wishlist for the current user, only if the bundle
+# is configured for a single wishlist per user, otherwise redirect
+webburza_wishlist_frontend_first:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: webburza.front_controller.wishlist:firstAction
+
+# Show a specific wishlist by slug
+webburza_wishlist_frontend_show:
+    path: /{slug}/
+    methods: [GET]
+    defaults:
+        _controller: webburza.front_controller.wishlist:showAction
+
+webburza_wishlist_frontend_clear:
+    path: /{id}/clear/
+    methods: [POST]
+    defaults:
+        _controller: webburza.front_controller.wishlist:clearAction
+
+webburza_wishlist_frontend_add_item:
+    path: /item/
+    methods: [POST]
+    defaults:
+        _controller: webburza.front_controller.wishlist_item:addAction
+
+webburza_wishlist_frontend_remove_item:
+    path: /item/{id}/
+    methods: [DELETE]
+    defaults:
+        _controller: webburza.front_controller.wishlist_item:removeAction

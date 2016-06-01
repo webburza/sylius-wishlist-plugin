@@ -1,0 +1,30 @@
+sylius_resource:
+    resources:
+        webburza.wishlist:
+            classes:
+                controller: Webburza\Sylius\WishlistBundle\Controller\Backend\WishlistController
+                repository: Webburza\Sylius\WishlistBundle\Doctrine\ORM\WishlistRepository
+                factory: Webburza\Sylius\WishlistBundle\Factory\WishlistFactory
+                model: Webburza\Sylius\WishlistBundle\Entity\Wishlist
+                form:
+                    default: Webburza\Sylius\WishlistBundle\Form\Type\WishlistType
+
+        webburza.wishlist_item:
+            classes:
+                controller: Webburza\Sylius\WishlistBundle\Controller\WishlistItemController
+                model: Webburza\Sylius\WishlistBundle\Entity\WishlistItem
+
+doctrine:
+    orm:
+        resolve_target_entities:
+            Webburza\Sylius\WishlistBundle\Model\WishlistInterface: %webburza.model.wishlist.class%
+            Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface: %webburza.model.wishlist_item.class%
+            Webburza\Sylius\WishlistBundle\Model\WishlistRepositoryInterface: %webburza.repository.wishlist.class%
+
+twig:
+    globals:
+        wishlist_provider: @wishlist_provider
+
+webburza_sylius_wishlist:
+    multiple: true
+    default_public: false
