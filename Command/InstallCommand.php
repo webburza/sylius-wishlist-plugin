@@ -74,14 +74,14 @@ class InstallCommand extends ContainerAwareCommand
     {
         $repository = $this->getContainer()->get('sylius.repository.permission');
 
-        // Get parent node (used for content)
-        $contentPermission = $repository->findOneBy(['code' => 'sylius.accounts']);
+        // Get parent node (used for accounts)
+        $accountPermission = $repository->findOneBy(['code' => 'sylius.accounts']);
 
         // Create permissions
-        $articleManagePermission = $this->createWishlistPermissions($contentPermission);
+        $wishlistManagePermission = $this->createWishlistPermissions($accountPermission);
 
         // Persist the permissions
-        $manager->persist($articleManagePermission);
+        $manager->persist($wishlistManagePermission);
         $manager->flush();
     }
 

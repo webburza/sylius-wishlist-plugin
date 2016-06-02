@@ -138,6 +138,7 @@ class WishlistItemController extends FOSRestController
      *
      * @param Request $request
      * @return mixed
+     * @throws BadRequestHttpException
      */
     protected function resolveProductVariant(Request $request)
     {
@@ -159,6 +160,7 @@ class WishlistItemController extends FOSRestController
      * Get the customer for the current user.
      *
      * @return CustomerInterface
+     * @throws BadRequestHttpException
      */
     protected function getCustomer()
     {
@@ -182,8 +184,12 @@ class WishlistItemController extends FOSRestController
     {
         // Check if a specific wishlist was requested
         if ($wishlistId = $request->get('wishlist_id')) {
-            return $this->get('webburza.repository.wishlist')
+            $wishlist = $this->get('webburza.repository.wishlist')
                         ->findForCustomer($customer, $wishlistId);
+
+            if (!$wishlist) {
+                throw new BadRequestHttpException();
+            }
         }
 
         // If not, get the first wishlist for the customer
