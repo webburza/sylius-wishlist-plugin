@@ -10,7 +10,7 @@ webburza:
                 my_wishlist: Moj popis želja
                 my_wishlists: Moji popisi želja
                 not_public: Ovaj popis želja nije javan.
-                not_public_notice: Ovaj popis želja nije javan, vidljiv je samo vama.
+                not_public_notice: Ovaj popis želja nije javan.
                 no_wishlist_items: Ovaj popis želja nema stavki.
             breadcrumb:
                 index: Popisi želja
@@ -25,7 +25,7 @@ webburza:
             wishlist_items: Stavke popisa želja
             default_title: Popis želja
             add_to_wishlist: Dodaj na popis želja
-            remove_from_wishlist: Ukloni sa popisa
+            remove_from_wishlist: Ukloni
             clear: Ukloni sve stavke
             label:
                 id: '#ID'

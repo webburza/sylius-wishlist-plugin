@@ -1,45 +1,72 @@
 {% extends 'SyliusWebBundle:Frontend:layout.html.twig' %}
 
+{% import 'SyliusWebBundle:Backend/Macros:alerts.html.twig' as alerts %}
+
 {% block title %}{{ wishlist.title }}{% endblock %}
 
 {% block content %}
-<h1>{{ wishlist.title }}</h1>
+    <div class="page-header">
+        {% if app.user and app.user.customer == wishlist.customer %}
+            <form action="{{ path('webburza_wishlist_frontend_clear', {id: wishlist.id}) }}" method="post" class="pull-right">
+                <button type="submit" class="btn btn-default">{{ 'webburza.sylius.wishlist.clear' | trans }}</button>
+            </form>
+        {% endif %}
 
-{% if not wishlist.public %}
-    <hr>
-    <p>{{ 'webburza.sylius.wishlist.frontend.not_public_notice' | trans }}</p>
-    <hr>
-{% endif %}
+        <h1>
+            {{ wishlist.title }}
 
-{% if (wishlist.items is empty) %}
-    <p>{{ 'webburza.sylius.wishlist.frontend.no_wishlist_items' | trans }}</p>
-{% else %}
-    <ul style="margin-top: 32px;">
-        {% for item in wishlist.items %}
-            <li style="margin-bottom: 20px;">
-                <strong>
-                    <a href="{{ path(item.productVariant.product) }}">
-                        {{ item.productVariant.product.name }}
-                    </a>
-                </strong> <br>
+            {% if not wishlist.public %}
+                <small>{{ 'webburza.sylius.wishlist.frontend.not_public_notice' | trans }}</small>
+            {% endif %}
+        </h1>
+    </div>
 
-                <small>
-                    {% if item.productVariant.presentation is not empty %}
-                        {{ item.productVariant.presentation }}
-                    {% elseif item.productVariant.options is not empty %}
-                        {% for option in item.productVariant.options %}
+    {% if wishlist.description %}
+        <div>
+            <p>{{ wishlist.description }}</p> <hr>
+        </div>
+    {% endif %}
+
+    {% for item in wishlist.items %}
+        <div class="row product">
+            <div class="col-md-3">
+                <a href="{{ path(item.productVariant.product) }}" class="thumbnail">
+                    <img src="{{ item.productVariant.product.image ? item.productVariant.product.image.path|imagine_filter('sylius_medium') : 'http://placehold.it/200x200' }}"
+                         alt="{{ item.productVariant.product.name }}"/>
+                </a>
+            </div>
+            <div class="col-md-9">
+                <a href="{{ path(item.productVariant.product) }}" class="btn btn-link">
+                    <h3>{{ item.productVariant.product.name }}</h3>
+                </a>
+
+                <p>
+                    {{ item.productVariant.product.shortDescription|default('sylius.product.no_description'|trans)|raw }}
+                </p>
+
+                <hr>
+
+                <div class="pull-left">
+                    {% if sylius_inventory_is_available(item.productVariant) %}
+                        <strong>
+                            {{ sylius_calculate_price(item.productVariant) | sylius_price }}
+                        </strong>
+                    {% endif %}
+
+                    <small>
+                        {% if item.productVariant.presentation is not empty %}
+                            | {{ item.productVariant.presentation }}
+                        {% elseif item.productVariant.options is not empty %}
+                            | {% for option in item.productVariant.options %}
                             {{ option.value }}{{ not loop.last ? ', ' : '' }}
                         {% endfor %}
-                    {% endif %}
-                </small>
-
-                <div>
-                    {{ sylius_calculate_price(item.productVariant)|sylius_price }}
+                        {% endif %}
+                    </small>
                 </div>
 
-                {% if app.user and app.user.customer == wishlist.customer %}
+                <div class="pull-right">
                     {% if sylius_inventory_is_available(item.productVariant) %}
-                        <form action="{{ path('sylius_cart_item_add', {'id': item.productVariant.product.id}) }}" method="post">
+                        <form action="{{ path('sylius_cart_item_add', {'id': item.productVariant.product.id}) }}" method="post" class="pull-right">
                             {% if item.productVariant.product.hasVariants %}
                                 {% if item.productVariant.product.isVariantSelectionMethodChoice %}
                                     <input type="hidden" name="sylius_cart_item[variant]" value="{{ item.productVariant.id }}">
@@ -52,28 +79,34 @@
 
                             <input type="hidden" name="sylius_cart_item[quantity]" value="1">
                             <input type="hidden" name="sylius_cart_item[_token]" value="{{ csrf_token('sylius_cart_item') }}">
-                            <button type="submit">{{ 'sylius.add_to_cart'|trans }}</button>
+
+                            <button type="submit" class="btn btn-success">
+                                <i class="icon-shopping-cart icon-white"></i>
+                                {{ 'sylius.add_to_cart'|trans }}
+                            </button>
                         </form>
                     {% else %}
-                        <div style="margin-bottom: 15px;"><button disabled="disabled">{{ 'sylius.out_of_stock' | trans }}</button></div>
+                        <button type="submit" class="btn btn-danger pull-right" disabled="disabled">
+                            <i class="icon-shopping-cart icon-white"></i>
+                            {{ 'sylius.out_of_stock'|trans }}
+                        </button>
                     {% endif %}
 
-                    <form action="{{ path('webburza_wishlist_frontend_remove_item', {id: item.id}) }}" method="post">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button type="submit">{{ 'webburza.sylius.wishlist.remove_from_wishlist' | trans }}</button>
-                    </form>
-                {% endif %}
+                    {% if app.user and app.user.customer == wishlist.customer %}
+                        <form action="{{ path('webburza_wishlist_frontend_remove_item', {id: item.id}) }}" method="post" class="pull-right">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-link">
+                                <i class="icon-remove"></i>
+                                {{ 'webburza.sylius.wishlist.remove_from_wishlist' | trans }}
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr>
+    {% else %}
+        {{ alerts.info('webburza.sylius.wishlist.frontend.no_wishlist_items'|trans) }}
+    {% endfor %}
 
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
-<hr>
-
-{% if app.user and app.user.customer == wishlist.customer %}
-    <form action="{{ path('webburza_wishlist_frontend_clear', {id: wishlist.id}) }}" method="post">
-        <button type="submit">{{ 'webburza.sylius.wishlist.clear' | trans }}</button>
-    </form>
-{% endif %}
 {% endblock %}

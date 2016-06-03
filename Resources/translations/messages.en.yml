@@ -10,7 +10,7 @@ webburza:
                 my_wishlist: My Wishlist
                 my_wishlists: My Wishlists
                 not_public: This wishlist is not public.
-                not_public_notice: This wishlist is not public. It's visible only to you.
+                not_public_notice: This wishlist is not public.
                 no_wishlist_items: This wishlist has no items.
             breadcrumb:
                 index: Wishlists
@@ -25,7 +25,7 @@ webburza:
             wishlist_items: Wishlist Items
             default_title: Wishlist
             add_to_wishlist: Add to wishlist
-            remove_from_wishlist: Remove from wishlist
+            remove_from_wishlist: Remove
             clear: Clear all items
             label:
                 id: '#ID'
