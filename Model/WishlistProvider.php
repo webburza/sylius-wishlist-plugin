@@ -31,8 +31,7 @@ class WishlistProvider
     public function __construct(
         SecurityContext $securityContext,
         WishlistRepositoryInterface $wishlistRepository
-    )
-    {
+    ) {
         $this->securityContext = $securityContext;
         $this->wishlistRepository = $wishlistRepository;
     }

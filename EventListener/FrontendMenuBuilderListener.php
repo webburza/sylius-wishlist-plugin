@@ -103,8 +103,7 @@ class FrontendMenuBuilderListener
             $route = 'webburza_wishlist_account_index';
             $routeParameters = [];
             $label = $this->translate('webburza.sylius.wishlist.frontend.my_wishlists');
-        }
-        else {
+        } else {
             // Get the current customer
             $customer = $this->getCustomer();
 
