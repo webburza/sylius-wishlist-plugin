@@ -3,7 +3,12 @@
 This bundle adds wishlist functionality to Sylius e-commerce platform. It can be configured
 to use single or multiple wishlists per user, which can be public or private.
 
-IMAGES
+
+[<img title="Wishlists CMS" src="http://i.imgur.com/YlyArwU.png" width="235">](http://i.imgur.com/o68LmWi.png)
+[<img title="Single Wishlist CMS" src="http://i.imgur.com/bWYIBzF.png" width="235">](http://i.imgur.com/bQmLDrq.png)
+[<img title="Product Page" src="http://i.imgur.com/FAcIt5x.png" width="235">](http://i.imgur.com/QCJ5fsQ.png)
+[<img title="Wishlist" src="http://i.imgur.com/eFMo85A.png" width="235">](http://i.imgur.com/jS2kML5.png)
+[<img title="Manage Wishlists" src="http://i.imgur.com/Ux2LL9u.png" width="235">](http://i.imgur.com/sw7LwUQ.png)
 
 ---
 
@@ -128,12 +133,19 @@ this implementation is up to you. It can be done in two ways.
 
   ```
   {% if wishlist_provider.wishlists | length > 1 %}
-      <label for="wishlist_id">{{ 'webburza.sylius.wishlist.frontend.wishlist' | trans }}</label>
-      <select name="wishlist_id" id="wishlist_id">
-          {% for wishlist in wishlist_provider.wishlists %}
-              <option value="{{ wishlist.id }}">{{ wishlist.title }}</option>
-          {% endfor %}
-      </select>
+      <hr>
+      <div class="form-group">
+          <label class="col-lg-2 control-label required" for="wishlist_id">
+              {{ 'webburza.sylius.wishlist.frontend.wishlist' | trans }}
+          </label>
+          <div class="col-lg-10">
+              <select id="wishlist_id" name="wishlist_id" class="form-control">
+                  {% for wishlist in wishlist_provider.wishlists %}
+                      <option value="{{ wishlist.id }}">{{ wishlist.title }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+      </div>
   {% endif %}
   ```
 
