@@ -47,7 +47,7 @@ class UninstallCommand extends ContainerAwareCommand
         $schemaManager = $manager->getConnection()->getSchemaManager();
 
         // Skip if product group table does not exist
-        if (!$schemaManager->tablesExist(['webburza_sylius_product_group'])) {
+        if (!$schemaManager->tablesExist(['webburza_sylius_wishlist'])) {
             return;
         }
 
