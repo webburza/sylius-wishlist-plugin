@@ -188,4 +188,4 @@ This bundle is available under the [MIT license](LICENSE).
 
 ## To-do
 
-- Tests
+- Tests (planned mid-June)
