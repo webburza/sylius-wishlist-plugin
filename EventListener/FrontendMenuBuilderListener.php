@@ -176,7 +176,7 @@ class FrontendMenuBuilderListener
                 'title' => $this->translate('webburza.sylius.wishlist.frontend.wishlist')
             ],
             'labelAttributes' => [
-                'icon' => 'star',
+                'icon' => 'icon-star',
                 'iconOnly' => false
             ],
         ])->setLabel($this->translate('webburza.sylius.wishlist.frontend.wishlist'));

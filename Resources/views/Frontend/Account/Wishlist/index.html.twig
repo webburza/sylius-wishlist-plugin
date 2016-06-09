@@ -1,5 +1,6 @@
 {% import 'SyliusWebBundle:Frontend/Macros:buttons.html.twig' as buttons %}
 {% extends 'SyliusWebBundle:Frontend/Account:layout.html.twig' %}
+{% import 'SyliusWebBundle:Backend/Macros:alerts.html.twig' as alerts %}
 
 {% block content %}
     <h4>{{ 'webburza.sylius.wishlist.frontend.wishlists'|trans }}</h4>
@@ -41,8 +42,8 @@
                 </tbody>
             </table>
         {% else %}
-            <p>{{ 'webburza.sylius.wishlist.no_result'|trans }}</p>
+            {{ alerts.info('webburza.sylius.wishlist.no_results'|trans) }}
         {% endif %}
-        <p>{{ buttons.create(path('webburza_wishlist_account_create'), 'webburza.sylius.wishlist.create') }}</p>
+        <p>{{ buttons.create(path('webburza_wishlist_account_create'), 'webburza.sylius.wishlist.create' | trans) }}</p>
     </div>
 {% endblock %}

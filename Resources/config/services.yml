@@ -27,7 +27,6 @@ services:
         arguments: [@translator, @service_container]
         tags:
             - { name: kernel.event_listener, event: sylius.customer.post_create, method: postCreate }
-            - { name: kernel.event_listener, event: sylius.customer.post_delete, method: postDelete }
 
     webburza.factory.wishlist:
         class: %webburza.factory.wishlist.class%

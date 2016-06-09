@@ -32,14 +32,14 @@ class WishlistItem implements ResourceInterface, WishlistItemInterface
      * @ORM\ManyToOne(targetEntity="\Webburza\Sylius\WishlistBundle\Model\WishlistInterface", inversedBy="items")
      * @ORM\JoinColumn(name="wishlist_id", nullable=false, onDelete="cascade")
      */
-    private $wishlist;
+    protected $wishlist;
 
     /**
      * @var VariantInterface
      * @ORM\ManyToOne(targetEntity="\Sylius\Component\Product\Model\VariantInterface")
      * @ORM\JoinColumn(name="product_variant_id", nullable=false, onDelete="cascade")
      */
-    private $productVariant;
+    protected $productVariant;
 
     /**
      * @var \DateTime
@@ -47,7 +47,7 @@ class WishlistItem implements ResourceInterface, WishlistItemInterface
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var \DateTime
@@ -55,7 +55,7 @@ class WishlistItem implements ResourceInterface, WishlistItemInterface
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @return int
