@@ -24,7 +24,7 @@ class ItemResolver implements ItemResolverInterface
     /**
      * @var FactoryInterface
      */
-    private $cartItemFactory;
+    protected $cartItemFactory;
 
     /**
      * @var RepositoryInterface
@@ -75,7 +75,7 @@ class ItemResolver implements ItemResolverInterface
         $item = $this->cartItemFactory->createNew();
 
         $channel = $this->channelContext->getChannel();
-        if (!$product = $this->productRepository->findOneBy(array('id' => $id, 'channels' => $channel))) {
+        if (!$product = $this->productRepository->findOneByIdAndChannel($id, $channel)) {
             throw new ItemResolvingException('Requested product was not found.');
         }
 

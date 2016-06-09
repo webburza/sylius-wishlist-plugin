@@ -26,5 +26,5 @@ twig:
         wishlist_provider: @wishlist_provider
 
 webburza_sylius_wishlist:
-    multiple: true
+    multiple: false
     default_public: false

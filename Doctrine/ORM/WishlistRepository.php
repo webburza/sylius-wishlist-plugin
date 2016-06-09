@@ -17,8 +17,8 @@ class WishlistRepository extends EntityRepository implements WishlistRepositoryI
      */
     public function getWishlistsForCustomer(CustomerInterface $customer)
     {
-        $queryBuilder = $this->getQueryBuilder();
-        $queryBuilder->where('IDENTITY('. $this->getAlias() .'.customer) = :customerId');
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
         $queryBuilder->setParameter('customerId', $customer->getId());
 
         return $queryBuilder->getQuery()->getResult();
@@ -36,7 +36,7 @@ class WishlistRepository extends EntityRepository implements WishlistRepositoryI
         $queryBuilder = $this->getCountQueryBuilder();
 
         // Apply customer condition
-        $queryBuilder->where('IDENTITY('. $this->getAlias() .'.customer) = :customerId');
+        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
         $queryBuilder->setParameter('customerId', $customer->getId());
 
         // Return record count
@@ -49,8 +49,8 @@ class WishlistRepository extends EntityRepository implements WishlistRepositoryI
     public function getCountQueryBuilder()
     {
         return $this->getEntityManager()->createQueryBuilder()
-             ->select('COUNT('. $this->getAlias() .')')
-             ->from($this->getEntityName(), $this->getAlias());
+             ->select('COUNT(o)')
+             ->from($this->getEntityName(), 'o');
     }
 
     /**
@@ -63,14 +63,14 @@ class WishlistRepository extends EntityRepository implements WishlistRepositoryI
     public function findForCustomer(CustomerInterface $customer, $id)
     {
         // Get query builder
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder('o');
 
         // Apply customer condition
-        $queryBuilder->where('IDENTITY('. $this->getAlias() .'.customer) = :customerId');
+        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
         $queryBuilder->setParameter('customerId', $customer->getId());
 
         // Apply wishlist ID parameter
-        $queryBuilder->andWhere($this->getAlias() . '.id = :id');
+        $queryBuilder->andWhere('o.id = :id');
         $queryBuilder->setParameter('id', $id);
 
         // Get the result
@@ -86,12 +86,12 @@ class WishlistRepository extends EntityRepository implements WishlistRepositoryI
     public function getFirstForCustomer(CustomerInterface $customer)
     {
         // Get query builder
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder('o');
 
         // Apply customer condition
-        $queryBuilder->where('IDENTITY('. $this->getAlias() .'.customer) = :customerId');
+        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
         $queryBuilder->setParameter('customerId', $customer->getId());
-        $queryBuilder->orderBy($this->getAlias() . '.createdAt', 'asc');
+        $queryBuilder->orderBy('o.createdAt', 'asc');
         $queryBuilder->setMaxResults(1);
 
         // Get the result

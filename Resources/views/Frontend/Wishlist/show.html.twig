@@ -72,7 +72,7 @@
                                     <input type="hidden" name="sylius_cart_item[variant]" value="{{ item.productVariant.id }}">
                                 {% else %}
                                     {% for option in item.productVariant.options %}
-                                        <input type="hidden" name="sylius_cart_item[variant][{{ urlizer.urlize(option.name) }}]" value="{{ option.id }}">
+                                        <input type="hidden" name="sylius_cart_item[variant][{{ option.option.code }}]" value="{{ option.id }}">
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
@@ -82,13 +82,13 @@
 
                             <button type="submit" class="btn btn-success">
                                 <i class="icon-shopping-cart icon-white"></i>
-                                {{ 'sylius.add_to_cart'|trans }}
+                                {{ 'sylius.ui.add_to_cart'|trans }}
                             </button>
                         </form>
                     {% else %}
                         <button type="submit" class="btn btn-danger pull-right" disabled="disabled">
                             <i class="icon-shopping-cart icon-white"></i>
-                            {{ 'sylius.out_of_stock'|trans }}
+                            {{ 'sylius.ui.out_of_stock'|trans }}
                         </button>
                     {% endif %}
 

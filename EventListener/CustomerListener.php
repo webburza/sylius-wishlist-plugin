@@ -16,17 +16,17 @@ class CustomerListener
     /**
      * @var Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    protected $eventDispatcher;
 
     /**
      * WishlistListener constructor.
@@ -72,36 +72,5 @@ class CustomerListener
 
         // Dispatch post-create event
         $this->eventDispatcher->dispatch('webburza.wishlist.post_create', new ResourceControllerEvent($wishlist));
-    }
-
-    /**
-     * Hook into the customer post-delete event,
-     * and delete all wishlists for the customer.
-     *
-     * @param ResourceControllerEvent $event
-     */
-    public function postDelete(ResourceControllerEvent $event)
-    {
-        /** @var CustomerInterface $customer */
-        $customer = $event->getSubject();
-
-        /** @var WishlistRepositoryInterface $wishlistRepository */
-        $wishlistRepository = $this->container->get('webburza.repository.wishlist');
-
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->container->get('webburza.manager.wishlist');
-
-        // Get all the wishlists for the customer
-        $wishlists = $wishlistRepository->getWishlistsForCustomer($customer);
-
-        // Remove each wishlist
-        foreach ($wishlists as $wishlist) {
-            $entityManager->remove($wishlist);
-        }
-
-        // Flush changes
-        if (!empty($wishlists)) {
-            $entityManager->flush();
-        }
     }
 }

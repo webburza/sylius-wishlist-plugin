@@ -15,7 +15,7 @@ use Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface;
  * Wishlist
  *
  * @ORM\Table(name="webburza_sylius_wishlist")
- * @ORM\Entity(repositoryClass="Webburza\Sylius\WishlistBundle\Model\WishlistRepositoryInterface")
+ * @ORM\Entity()
  */
 class Wishlist implements ResourceInterface, WishlistInterface
 {
@@ -34,7 +34,7 @@ class Wishlist implements ResourceInterface, WishlistInterface
      * @ORM\Column(name="title", type="string", length=255)
      * @Assert\NotBlank()
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string
@@ -42,21 +42,21 @@ class Wishlist implements ResourceInterface, WishlistInterface
      * @ORM\Column(name="slug", type="string", length=255)
      * @Gedmo\Slug(fields={"title"})
      */
-    private $slug;
+    protected $slug;
 
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
+    protected $description;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="public", type="boolean")
      */
-    private $public;
+    protected $public;
 
     /**
      * @var \DateTime
@@ -64,7 +64,7 @@ class Wishlist implements ResourceInterface, WishlistInterface
      * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
      */
-    private $createdAt;
+    protected $createdAt;
 
     /**
      * @var \DateTime
@@ -72,20 +72,20 @@ class Wishlist implements ResourceInterface, WishlistInterface
      * @ORM\Column(name="updated_at", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * @var CustomerInterface
      * @ORM\ManyToOne(targetEntity="\Sylius\Component\User\Model\CustomerInterface")
      * @ORM\JoinColumn(name="customer_id", nullable=false, onDelete="cascade")
      */
-    private $customer;
+    protected $customer;
 
     /**
      * @var WishlistItemInterface
      * @ORM\OneToMany(targetEntity="\Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface", mappedBy="wishlist")
      */
-    private $items;
+    protected $items;
 
     /**
      * Wishlist constructor.

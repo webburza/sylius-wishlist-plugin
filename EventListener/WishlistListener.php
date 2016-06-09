@@ -14,12 +14,12 @@ class WishlistListener
     /**
      * @var Translator
      */
-    private $translator;
+    protected $translator;
 
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * WishlistListener constructor.

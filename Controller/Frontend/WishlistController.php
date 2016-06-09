@@ -5,7 +5,6 @@ namespace Webburza\Sylius\WishlistBundle\Controller\Frontend;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Gedmo\Sluggable\Util\Urlizer;
 use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,8 +66,7 @@ class WishlistController extends FOSRestController
         $view
             ->setTemplate('WebburzaSyliusWishlistBundle:Frontend/Wishlist:show.html.twig')
             ->setData([
-                'wishlist' => $wishlist,
-                'urlizer' => new Urlizer()
+                'wishlist' => $wishlist
             ])
         ;
 
@@ -107,8 +105,7 @@ class WishlistController extends FOSRestController
         $view
             ->setTemplate('WebburzaSyliusWishlistBundle:Frontend/Wishlist:show.html.twig')
             ->setData([
-                'wishlist' => $wishlist,
-                'urlizer' => new Urlizer()
+                'wishlist' => $wishlist
             ])
         ;
 

@@ -99,8 +99,10 @@ class WishlistItemController extends FOSRestController
         // Create the Wishlist Item
         /** @var WishlistItemInterface $wishlistItem */
         $wishlistItem = $this->get('webburza.factory.wishlist_item')->createNew();
+
         $wishlistItem->setWishlist($wishlist);
         $wishlistItem->setProductVariant($productVariant);
+
         $entityManager->persist($wishlistItem);
 
         /** @var WishlistInterface $wishlist */
@@ -190,6 +192,8 @@ class WishlistItemController extends FOSRestController
             if (!$wishlist) {
                 throw new BadRequestHttpException();
             }
+
+            return $wishlist;
         }
 
         // If not, get the first wishlist for the customer
