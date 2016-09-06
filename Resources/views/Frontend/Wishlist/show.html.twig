@@ -54,8 +54,8 @@
                     {% endif %}
 
                     <small>
-                        {% if item.productVariant.presentation is not empty %}
-                            | {{ item.productVariant.presentation }}
+                        {% if item.productVariant.name is not empty %}
+                            | {{ item.productVariant.name }}
                         {% elseif item.productVariant.options is not empty %}
                             | {% for option in item.productVariant.options %}
                             {{ option.value }}{{ not loop.last ? ', ' : '' }}
