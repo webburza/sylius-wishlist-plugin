@@ -31,7 +31,7 @@
         <div class="row product">
             <div class="col-md-3">
                 <a href="{{ path(item.productVariant.product) }}" class="thumbnail">
-                    <img src="{{ item.productVariant.product.image ? item.productVariant.product.image.path|imagine_filter('sylius_medium') : 'http://placehold.it/200x200' }}"
+                    <img src="{{ item.productVariant.image ? item.productVariant.image.path|imagine_filter('sylius_medium') : 'http//placehold.it/200x200' }}"
                          alt="{{ item.productVariant.product.name }}"/>
                 </a>
             </div>

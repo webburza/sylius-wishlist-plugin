@@ -85,7 +85,7 @@ class ItemResolver implements ItemResolverInterface
         $form->submit($request);
 
         // Get appropriate variant
-        $variant = $item->getVariant() ? $item->getVariant() : $product->getMasterVariant();
+        $variant = $item->getVariant() ? $item->getVariant() : $product->getFirstVariant();
 
         return $variant;
     }

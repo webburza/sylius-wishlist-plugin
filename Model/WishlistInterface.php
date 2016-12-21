@@ -64,4 +64,10 @@ interface WishlistInterface extends ResourceInterface, CustomerAwareInterface, T
      * @return WishlistInterface
      */
     public function addItem(WishlistItemInterface $item);
+
+    /**
+     * @param WishlistItemInterface $item
+     * @return bool
+     */
+    public function hasItem(WishlistItemInterface $item);
 }

@@ -85,10 +85,11 @@ class WishlistItemController extends FOSRestController
 
         // Get the current customer and the wishlist to which the item should be added
         $customer = $this->getCustomer();
+        /** @var WishlistInterface $wishlist */
         $wishlist = $this->resolveWishlist($request, $customer);
 
         // If no wishlist found, create a new one
-        if (!$wishlist) {
+        if (! $wishlist) {
             $wishlist = $this->get('webburza.factory.wishlist')->createDefault($customer);
             $entityManager->persist($wishlist);
         }
@@ -99,14 +100,12 @@ class WishlistItemController extends FOSRestController
         // Create the Wishlist Item
         /** @var WishlistItemInterface $wishlistItem */
         $wishlistItem = $this->get('webburza.factory.wishlist_item')->createNew();
-
-        $wishlistItem->setWishlist($wishlist);
         $wishlistItem->setProductVariant($productVariant);
 
-        $entityManager->persist($wishlistItem);
-
-        /** @var WishlistInterface $wishlist */
-        $wishlist->addItem($wishlistItem);
+        if (! $wishlist->hasItem($wishlistItem)) {
+            $wishlist->addItem($wishlistItem);
+            $entityManager->persist($wishlistItem);
+        }
 
         // Flush changes
         $entityManager->flush();
