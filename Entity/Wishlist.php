@@ -1,7 +1,7 @@
 <?php
-
 namespace Webburza\Sylius\WishlistBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -19,6 +19,7 @@ use Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface;
  */
 class Wishlist implements ResourceInterface, WishlistInterface
 {
+
     /**
      * @var integer
      *
@@ -82,7 +83,7 @@ class Wishlist implements ResourceInterface, WishlistInterface
     protected $customer;
 
     /**
-     * @var WishlistItemInterface
+     * @var Collection|WishlistItemInterface[]
      * @ORM\OneToMany(targetEntity="\Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface", mappedBy="wishlist")
      */
     protected $items;
@@ -261,9 +262,26 @@ class Wishlist implements ResourceInterface, WishlistInterface
      */
     public function addItem(WishlistItemInterface $item)
     {
-        $this->items->add($item);
-        $item->setWishlist($this);
+        if (! $this->hasItem($item)) {
+            $item->setWishlist($this);
+            $this->items->add($item);
+        }
 
         return $this;
+    }
+
+    /**
+     * @param WishlistItemInterface $item
+     * @return bool
+     */
+    public function hasItem(WishlistItemInterface $item)
+    {
+        foreach ($this->items as $wishlistItem) {
+            if ($item->getProductVariant()->getId() === $wishlistItem->getProductVariant()->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
