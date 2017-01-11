@@ -1,29 +1,41 @@
+imports:
+    - { resource: "parameters.yml" }
+    - { resource: "services.yml" }
+    - { resource: "grids.yml" }
+
 sylius_resource:
     resources:
-        webburza.wishlist:
+        webburza_wishlist.wishlist:
             classes:
-                controller: Webburza\Sylius\WishlistBundle\Controller\Backend\WishlistController
-                repository: Webburza\Sylius\WishlistBundle\Doctrine\ORM\WishlistRepository
-                factory: Webburza\Sylius\WishlistBundle\Factory\WishlistFactory
-                model: Webburza\Sylius\WishlistBundle\Entity\Wishlist
-                form:
-                    default: Webburza\Sylius\WishlistBundle\Form\Type\WishlistType
+                repository: '%webburza_wishlist.repository.wishlist.class%'
+                factory: '%webburza_wishlist.factory.wishlist.class%'
+                model: '%webburza_wishlist.model.wishlist.class%'
+                form: '%webburza_wishlist.form.type.admin_wishlist.class%'
 
-        webburza.wishlist_item:
+        webburza_wishlist.wishlist_item:
             classes:
-                controller: Webburza\Sylius\WishlistBundle\Controller\WishlistItemController
-                model: Webburza\Sylius\WishlistBundle\Entity\WishlistItem
+                model: '%webburza_wishlist.model.wishlist_item.class%'
 
 doctrine:
     orm:
+        entity_managers:
+            default:
+                mappings:
+                    WebburzaSyliusWishlistBundle:
+                        type: xml
+                        prefix: Webburza\Sylius\WishlistBundle\Model
+                        dir: 'Resources/config/doctrine'
+                        is_bundle: true
+                        mapping: true
+
         resolve_target_entities:
-            Webburza\Sylius\WishlistBundle\Model\WishlistInterface: %webburza.model.wishlist.class%
-            Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface: %webburza.model.wishlist_item.class%
-            Webburza\Sylius\WishlistBundle\Model\WishlistRepositoryInterface: %webburza.repository.wishlist.class%
+            Sylius\Component\Core\Model\ShopUserInterface: '%sylius.model.shop_user.class%'
+            Webburza\Sylius\WishlistBundle\Model\WishlistInterface: '%webburza_wishlist.model.wishlist.class%'
+            Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface: '%webburza_wishlist.model.wishlist_item.class%'
 
 twig:
     globals:
-        wishlist_provider: @wishlist_provider
+        wishlist_provider: '@webburza_wishlist.provider.wishlist'
 
 webburza_sylius_wishlist:
     multiple: false

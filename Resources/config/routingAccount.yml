@@ -2,32 +2,32 @@
 #  ACCOUNT
 # ------------------------------------------------------------------------------
 
-webburza_wishlist_account_edit:
-    path: /{id}/edit
-    methods: [GET]
-    defaults:
-        _controller: webburza.account_controller.wishlist:updateAction
-
-webburza_wishlist_account_update:
-    path: /{id}
-    methods: [PUT]
-    defaults:
-        _controller: webburza.account_controller.wishlist:updateAction
-
-webburza_wishlist_account_index:
-    path: /
-    methods: [GET]
-    defaults:
-        _controller: webburza.account_controller.wishlist:indexAction
-
-webburza_wishlist_account_create:
+webburza_account_wishlist_create:
     path: /new
     methods: [GET, POST]
     defaults:
-        _controller: webburza.account_controller.wishlist:createAction
+        _controller: webburza_wishlist.controller.account.wishlist:createAction
 
-webburza_wishlist_account_delete:
+webburza_account_wishlist_edit:
+    path: /{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: webburza_wishlist.controller.account.wishlist:updateAction
+
+webburza_account_wishlist_update:
+    path: /{id}
+    methods: [PUT, POST]
+    defaults:
+        _controller: webburza_wishlist.controller.account.wishlist:updateAction
+
+webburza_account_wishlist_index:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: webburza_wishlist.controller.account.wishlist:indexAction
+
+webburza_account_wishlist_delete:
     path: /{id}
     methods: [DELETE]
     defaults:
-        _controller: webburza.account_controller.wishlist:deleteAction
+        _controller: webburza_wishlist.controller.account.wishlist:deleteAction

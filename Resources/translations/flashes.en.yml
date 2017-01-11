@@ -1,4 +1,0 @@
-webburza:
-    sylius:
-        wishlist:
-            cannot_delete: Customer must have at least one wishlist.

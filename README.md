@@ -3,13 +3,6 @@
 This bundle adds wishlist functionality to Sylius e-commerce platform. It can be configured
 to use single or multiple wishlists per user, which can be public or private.
 
-
-[<img title="Wishlists CMS" src="http://i.imgur.com/YlyArwU.png" width="235">](http://i.imgur.com/o68LmWi.png)
-[<img title="Single Wishlist CMS" src="http://i.imgur.com/bWYIBzF.png" width="235">](http://i.imgur.com/bQmLDrq.png)
-[<img title="Product Page" src="http://i.imgur.com/FAcIt5x.png" width="235">](http://i.imgur.com/QCJ5fsQ.png)
-[<img title="Wishlist" src="http://i.imgur.com/eFMo85A.png" width="235">](http://i.imgur.com/jS2kML5.png)
-[<img title="Manage Wishlists" src="http://i.imgur.com/Ux2LL9u.png" width="235">](http://i.imgur.com/sw7LwUQ.png)
-
 ---
 
 ## Installation
@@ -25,11 +18,11 @@ to use single or multiple wishlists per user, which can be public or private.
   ```php
   public function registerBundles()
   {
-    $bundles = array(
+    $bundles = [
       // ...
       new \Webburza\Sylius\WishlistBundle\WebburzaSyliusWishlistBundle(),
       // ...
-    );
+    ];
   }
   ```
 
@@ -37,7 +30,7 @@ to use single or multiple wishlists per user, which can be public or private.
 
   ```yaml
   imports:
-      - { resource: @WebburzaSyliusWishlistBundle/Resources/config/config.yml }
+      - { resource: "@WebburzaSyliusWishlistBundle/Resources/config/config.yml" }
   ```
 
   Among other things, this provides configuration entries which can then be overriden
@@ -52,16 +45,16 @@ to use single or multiple wishlists per user, which can be public or private.
   4. register routes in `app/config/routing.yml`
 
   ```yaml
-  webburza_sylius_wishlist_bundle:
-      resource: "@WebburzaSyliusWishlistBundle/Resources/config/routing.yml"
-
-  webburza_sylius_wishlist_bundle_front:
-      resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingFront.yml"
-      prefix: /wishlist
-
-  webburza_sylius_wishlist_bundle_account:
-      resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingAccount.yml"
-      prefix: /account/wishlists
+  webburza_wishlist:
+    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routing.yml"
+  
+  webburza_wishlist_front:
+    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingFront.yml"
+    prefix: /wishlist
+  
+  webburza_wishlist_account:
+    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingAccount.yml"
+    prefix: /account/wishlists
   ```
 
   As you can see, there are three groups of routes, the main resource (administration)
@@ -69,27 +62,32 @@ to use single or multiple wishlists per user, which can be public or private.
   wishlist(s), create new ones, mark them public/private, etc...
 
   5. The bundle should now be fully integrated, but it still requires
-database tables to be created and RBAC permissions set. To ease this
-process, after you've integrated the bundle you can run the
-following command:
-
+  database tables to be created. For this, we recommend using migrations.
+  
   ```bash
-  $ app/console webburza:sylius-wishlist-bundle:install
+  $ bin/console doctrine:migrations:diff
+  $ bin/console doctrine:migrations:migrate
+  ```
+  
+  Or if you don't use migrations, you can update the database schema directly.
+  
+  ```bash
+    $ bin/console doctrine:schema:update
   ```
 
-  This will create all the required database tables, prefixed with `webburza_`,
-and all the RBAC permissions, under the existing 'content' node.
-
-  6. By default, users have no wishlists. When the user adds something to a wishlist
-  for the first time, if they have no wishlists, a new wishlist will be created for them.
-  There is a command available to create initial wishlists for all users, which we
-  would recommend using.
+  6. If you're integrating this bundle into an existing project, your existing
+  users will not have any wishlists associated. This is not an issue as wishlists
+  are automatically created when needed. All new users will automatically have
+  a wishlist created for them from the start.
+  
+  If you want to make sure all your users have wishlists, you can run a command
+  which will create initial wishlists for all existing users which do not already have one.
 
   ```bash
   $ app/console webburza:sylius-wishlist-bundle:create-initial
   ```
 
-## Integration on products pages
+## Integration on shop pages
 
 Now that you've installed and integrated the bundle, the users can view their wishlists,
 create new ones, etc, depending on bundle configuration, but they still have no way of
@@ -102,52 +100,22 @@ this implementation is up to you. It can be done in two ways.
   the simplest way to finalize integration is to add a new 'Add to wishlist' button
   next to the 'Add to cart' button in the existing form.
 
-  Open your product show.html.twig file, most likely in:
-  app/Resources/SyliusWebBundle/views/Frontend/Product/show.html.twig
+  Open the template containing your 'add to cart' form, most likely in:
+  `app/Resources/SyliusShopBundle/Resources/views/Product/Show/_addToCart.html.twig`
 
   Find the 'add to cart' button, by default:
   ```
-  <button type="submit" class="btn btn-success btn-lg btn-block"><i class="icon-shopping-cart icon-white icon-large"></i> {{ 'sylius.add_to_cart'|trans }}</button>
+  <button type="submit" class="ui huge primary icon labeled button"><i class="cart icon"></i> {{ 'sylius.ui.add_to_cart'|trans }}</button>
   ```
 
-  And under it, add the new 'add to wishlist' button.
+  And under it, add the following line.
   ```
-  {% if app.user and app.user.customer %}
-    <button type="submit" class="btn btn-success btn-block" formaction="{{ path('webburza_wishlist_frontend_add_item', {'id': product.id}) }}"><i class="icon-star icon-white"></i> {{ 'webburza.sylius.wishlist.add_to_wishlist'|trans }}</button>
-  {% endif %}
+  {% include '@WebburzaSyliusWishlist/Frontend/Shop/_addToWishlist.html.twig' %}
   ```
-
-  The main difference is the `formaction` attribute, which submits the same form
-  to a different URL, in this case, the route which adds an item to wishlist.
-
-  It is very important to note that this will not work for IE9 and older browsers.
-  [Click here](http://www.w3schools.com/tags/att_button_formaction.asp) for details.
-
-  Alternatively you can implement your own client-side logic to change the URL to which the
-  form is submitted.
-
-  This will add the product to the first wishlist found for the user, but if you're using
-  the bundle in multiple wishlist mode, you'll want the user to be able to choose the
-  appropriate wishlist. Add the following code above the 'add to wishlist' button, and
-  style it however you want to match your template.
-
-  ```
-  {% if wishlist_provider.wishlists | length > 1 %}
-      <hr>
-      <div class="form-group">
-          <label class="col-lg-2 control-label required" for="wishlist_id">
-              {{ 'webburza.sylius.wishlist.frontend.wishlist' | trans }}
-          </label>
-          <div class="col-lg-10">
-              <select id="wishlist_id" name="wishlist_id" class="form-control">
-                  {% for wishlist in wishlist_provider.wishlists %}
-                      <option value="{{ wishlist.id }}">{{ wishlist.title }}</option>
-                  {% endfor %}
-              </select>
-          </div>
-      </div>
-  {% endif %}
-  ```
+  
+  This will include the 'Add to Wishlist' button, and all required functionality.
+  It will also feature a dropdown if the user has more than one wishlist,
+  to enable the user to select which wishlist they want to add the item to.
 
   The dropdown will only be rendered if the user has more than one wishlist.
 
@@ -161,8 +129,8 @@ this implementation is up to you. It can be done in two ways.
       url: '/wishlist/item/',
       type: 'POST',
       data: {
-          product_variant_id: 123,
-          wishlist_id: 456 // optional
+          productVariantId: 123,
+          wishlistId: 456 // optional
       },
       success: // ...
   });
@@ -171,8 +139,20 @@ this implementation is up to you. It can be done in two ways.
   You can also submit the data in the same format as in the first example
   (the 'add-to-cart' form), both examples use the same route, and both
   accept variant data to be resolved (first example), or an already resolved
-  product_variant_id.
+  productVariantId.
+  
+### Wishlist badge
 
+You might also want to feature a badge in your header which links to the wishlist
+  and shows the current number of items added, similar to the existing cart badge.
+  
+To do this, just add this line to the bottom of the same file
+`app/Resources/SyliusShopBundle/Resources/views/Cart/_widget.html.twig`
+
+```
+{% include '@WebburzaSyliusWishlist/Frontend/Shop/_badge.html.twig' %}
+```
+  
 ## Translations and naming
 
 The bundle has multilingual support, and language files can be
@@ -188,4 +168,4 @@ This bundle is available under the [MIT license](LICENSE).
 
 ## To-do
 
-- Tests (planned mid-June)
+- Tests

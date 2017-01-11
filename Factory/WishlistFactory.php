@@ -2,12 +2,18 @@
 
 namespace Webburza\Sylius\WishlistBundle\Factory;
 
-use Sylius\Component\Resource\Factory\Factory;
-use Sylius\Component\User\Model\CustomerInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
+use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Webburza\Sylius\WishlistBundle\Model\WishlistInterface;
 
-class WishlistFactory extends Factory
+class WishlistFactory implements WishlistFactoryInterface
 {
+    /**
+     * @var FactoryInterface
+     */
+    protected $factory;
+
     /**
      * @var TranslatorInterface
      */
@@ -19,36 +25,46 @@ class WishlistFactory extends Factory
     protected $defaultPublic;
 
     /**
-     * WishlistFactory constructor.
-     *
-     * @param $className
+     * @param FactoryInterface $factory
      * @param TranslatorInterface $translator
-     * @param $defaultPublic
+     * @param bool $defaultPublic
      */
-    public function __construct($className, TranslatorInterface $translator, $defaultPublic)
-    {
-        parent::__construct($className);
-
+    public function __construct(
+        FactoryInterface $factory,
+        TranslatorInterface $translator,
+        $defaultPublic
+    ) {
+        $this->factory = $factory;
         $this->translator = $translator;
         $this->defaultPublic = $defaultPublic;
     }
 
-    public function createDefault(CustomerInterface $customer)
+    /**
+     * @return WishlistInterface|object
+     */
+    public function createNew()
+    {
+        return $this->factory->createNew();
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return WishlistInterface
+     */
+    public function createDefault(UserInterface $user)
     {
         // Create a new wishlist
         $wishlist = $this->createNew();
 
         // Set default title
-        $wishlist->setTitle(
-            $this->translator
-                 ->trans('webburza.sylius.wishlist.default_title')
-        );
+        $wishlist->setTitle($this->translator->trans('webburza_wishlist.wishlist.default_title'));
 
         // Set default public state
         $wishlist->setPublic($this->defaultPublic);
 
-        // Set customer
-        $wishlist->setCustomer($customer);
+        // Set user
+        $wishlist->setUser($user);
 
         return $wishlist;
     }

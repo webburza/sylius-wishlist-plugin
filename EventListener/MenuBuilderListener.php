@@ -1,31 +1,26 @@
 <?php
+
 namespace Webburza\Sylius\WishlistBundle\EventListener;
 
-use Sylius\Bundle\WebBundle\Event\MenuBuilderEvent;
-use Symfony\Component\Translation\DataCollectorTranslator;
-use Symfony\Component\Translation\Translator;
+use Sylius\Bundle\UiBundle\Menu\Event\MenuBuilderEvent;
 
 class MenuBuilderListener
 {
     /**
-     * @var Translator
+     * @param MenuBuilderEvent $event
      */
-    protected $translator;
-
-    public function __construct(DataCollectorTranslator $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function addBackendMenuItems(MenuBuilderEvent $event)
     {
         $menu = $event->getMenu();
 
-        $menu['customer']
-            ->addChild('webburza_sylius_wishlist', array(
-                'route'           => 'webburza_wishlist_index',
-                'labelAttributes' => array('icon' => 'glyphicon glyphicon-star'),
-            ))
-            ->setLabel($this->translator->trans('webburza.sylius.wishlist.backend.wishlists'));
+        // Get or create the parent group
+        if (null == ($contentMenu = $menu->getChild('customers'))) {
+            $contentMenu = $menu->addChild('customers')->setLabel('webburza_wishlist.ui.customer');
+        }
+
+        // Add 'Wishlists' menu item
+        $contentMenu->addChild('webburza_wishlists', ['route' => 'webburza_wishlist_admin_wishlist_index'])
+                    ->setLabel('webburza_wishlist.ui.wishlists')
+                    ->setLabelAttribute('icon', 'star');
     }
 }

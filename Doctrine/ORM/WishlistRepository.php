@@ -2,99 +2,58 @@
 
 namespace Webburza\Sylius\WishlistBundle\Doctrine\ORM;
 
+use Doctrine\ORM\QueryBuilder;
 use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
-use Sylius\Component\User\Model\CustomerInterface;
+use Sylius\Component\User\Model\UserInterface;
 use Webburza\Sylius\WishlistBundle\Model\WishlistInterface;
-use Webburza\Sylius\WishlistBundle\Model\WishlistRepositoryInterface;
+use Webburza\Sylius\WishlistBundle\Repository\WishlistRepositoryInterface;
 
 class WishlistRepository extends EntityRepository implements WishlistRepositoryInterface
 {
     /**
-     * Get all wishlists for a customer.
-     *
-     * @param CustomerInterface $customer
-     * @return array
+     * @return QueryBuilder
      */
-    public function getWishlistsForCustomer(CustomerInterface $customer)
+    public function createListQueryBuilder()
     {
         $queryBuilder = $this->createQueryBuilder('o');
-        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
-        $queryBuilder->setParameter('customerId', $customer->getId());
 
-        return $queryBuilder->getQuery()->getResult();
+        $queryBuilder->innerJoin('o.user', 'user');
+
+        return $queryBuilder;
     }
 
     /**
-     * Get wishlist count for a customer.
+     * @param UserInterface $user
      *
-     * @param CustomerInterface $customer
      * @return integer
      */
-    public function getCountForCustomer(CustomerInterface $customer)
+    public function getCountForUser(UserInterface $user)
     {
         // Get query builder
-        $queryBuilder = $this->getCountQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder('o');
+        $queryBuilder->select('COUNT(o)');
 
-        // Apply customer condition
-        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
-        $queryBuilder->setParameter('customerId', $customer->getId());
+        // Apply user condition
+        $queryBuilder->where('o.user = :user');
+        $queryBuilder->setParameter('user', $user);
 
         // Return record count
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
     /**
-     * @return \Doctrine\ORM\QueryBuilder
-     */
-    public function getCountQueryBuilder()
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-             ->select('COUNT(o)')
-             ->from($this->getEntityName(), 'o');
-    }
-
-    /**
-     * Get a wishlist by id, for a customer.
+     * Get the first wishlist for the user, if any.
      *
-     * @param CustomerInterface $customer
-     * @param $id
-     * @return WishlistInterface
-     */
-    public function findForCustomer(CustomerInterface $customer, $id)
-    {
-        // Get query builder
-        $queryBuilder = $this->createQueryBuilder('o');
-
-        // Apply customer condition
-        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
-        $queryBuilder->setParameter('customerId', $customer->getId());
-
-        // Apply wishlist ID parameter
-        $queryBuilder->andWhere('o.id = :id');
-        $queryBuilder->setParameter('id', $id);
-
-        // Get the result
-        return $queryBuilder->getQuery()->getOneOrNullResult();
-    }
-
-    /**
-     * Get the first wishlist for the customer, if any.
+     * @param UserInterface $user
      *
-     * @param CustomerInterface $customer
-     * @return WishlistInterface|null
+     * @return WishlistInterface|object|null
      */
-    public function getFirstForCustomer(CustomerInterface $customer)
+    public function getFirstForUser(UserInterface $user)
     {
-        // Get query builder
-        $queryBuilder = $this->createQueryBuilder('o');
-
-        // Apply customer condition
-        $queryBuilder->where('IDENTITY(o.customer) = :customerId');
-        $queryBuilder->setParameter('customerId', $customer->getId());
-        $queryBuilder->orderBy('o.createdAt', 'asc');
-        $queryBuilder->setMaxResults(1);
-
-        // Get the result
-        return $queryBuilder->getQuery()->getOneOrNullResult();
+        return $this->findOneBy([
+            'user' => $user
+        ], [
+            'createdAt' => 'asc'
+        ]);
     }
 }

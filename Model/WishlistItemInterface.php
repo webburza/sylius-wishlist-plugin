@@ -4,22 +4,13 @@ namespace Webburza\Sylius\WishlistBundle\Model;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Sylius\Component\Product\Model\VariantInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Webburza\Sylius\WishlistBundle\Entity\WishlistItem;
 
-/**
- * WishlistItemInterface
- */
 interface WishlistItemInterface extends ResourceInterface, TimestampableInterface
 {
-    /**
-     * @return int
-     */
-    public function getId();
-
     /**
      * @return WishlistInterface
      */
@@ -27,18 +18,20 @@ interface WishlistItemInterface extends ResourceInterface, TimestampableInterfac
 
     /**
      * @param WishlistInterface $wishlist
-     * @return WishlistItem
+     *
+     * @return WishlistItemInterface
      */
     public function setWishlist(WishlistInterface $wishlist);
 
     /**
-     * @return VariantInterface
+     * @return ProductVariantInterface
      */
     public function getProductVariant();
 
     /**
-     * @param VariantInterface $productVariant
-     * @return WishlistItem
+     * @param ProductVariantInterface $productVariant
+     *
+     * @return WishlistItemInterface
      */
-    public function setProductVariant(VariantInterface $productVariant);
+    public function setProductVariant(ProductVariantInterface $productVariant);
 }
