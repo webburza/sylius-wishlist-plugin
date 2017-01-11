@@ -5,27 +5,32 @@ namespace Webburza\Sylius\WishlistBundle\Form\Type;
 use Sylius\Bundle\ResourceBundle\Form\Type\AbstractResourceType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class WishlistType extends BaseWishlistType
+class WishlistType extends AbstractResourceType
 {
     /**
-     * Build the Wishlist form
-     *
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('customer', 'sylius_customer_choice', [
-            'label' => 'webburza.sylius.wishlist.label.customer',
-            'required' => true
+        $builder->add('title', Type\TextType::class, [
+            'label'       => 'webburza_wishlist.wishlist.label.title',
+            'required'    => true,
+            'constraints' => [
+                new NotBlank()
+            ]
         ]);
 
-        parent::buildForm($builder, $options);
-    }
+        $builder->add('description', Type\TextareaType::class, [
+            'label'    => 'webburza_wishlist.wishlist.label.description',
+            'required' => false
+        ]);
 
-    public function getName()
-    {
-        return 'webburza_wishlist';
+        $builder->add('public', Type\CheckboxType::class, [
+            'label'    => 'webburza_wishlist.wishlist.label.public',
+            'required' => false
+        ]);
     }
 }

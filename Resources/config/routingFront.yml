@@ -4,33 +4,38 @@
 
 # Show the first wishlist for the current user, only if the bundle
 # is configured for a single wishlist per user, otherwise redirect
-webburza_wishlist_frontend_first:
+webburza_frontend_wishlist_first:
     path: /
     methods: [GET]
     defaults:
-        _controller: webburza.front_controller.wishlist:firstAction
+        _controller: webburza_wishlist.controller.front.wishlist:firstAction
 
-# Show a specific wishlist by slug
-webburza_wishlist_frontend_show:
+webburza_frontend_wishlist_show:
     path: /{slug}/
     methods: [GET]
     defaults:
-        _controller: webburza.front_controller.wishlist:showAction
+        _controller: webburza_wishlist.controller.front.wishlist:showAction
 
-webburza_wishlist_frontend_clear:
+webburza_frontend_wishlist_clear:
     path: /{id}/clear/
     methods: [POST]
     defaults:
-        _controller: webburza.front_controller.wishlist:clearAction
+        _controller: webburza_wishlist.controller.front.wishlist:clearAction
 
-webburza_wishlist_frontend_add_item:
+webburza_frontend_wishlist_add_item:
     path: /item/
     methods: [POST]
     defaults:
-        _controller: webburza.front_controller.wishlist_item:addAction
+        _controller: webburza_wishlist.controller.front.wishlist_item:addAction
 
-webburza_wishlist_frontend_remove_item:
+webburza_frontend_wishlist_remove_item:
     path: /item/{id}/
     methods: [DELETE]
     defaults:
-        _controller: webburza.front_controller.wishlist_item:removeAction
+        _controller: webburza_wishlist.controller.front.wishlist_item:removeAction
+
+webburza_frontend_wishlist_partial_cart_add_item:
+    path: /item/add-to-cart/
+    methods: [GET]
+    defaults:
+        _controller: webburza_wishlist.controller.front.wishlist_item:addToCartAction

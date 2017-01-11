@@ -2,12 +2,16 @@
 
 namespace Webburza\Sylius\WishlistBundle\Controller\Frontend;
 
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\FOSRestController;
-use Sylius\Component\User\Model\CustomerInterface;
+use FOS\RestBundle\View\View;
+use Sylius\Bundle\CoreBundle\Form\Type\Order\AddToCartType;
+use Sylius\Component\Order\Model\OrderItemInterface;
+use Sylius\Component\User\Model\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Webburza\Sylius\WishlistBundle\Model\WishlistInterface;
 use Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface;
@@ -25,50 +29,79 @@ class WishlistItemController extends FOSRestController
     }
 
     /**
-     * Remove a wishlist item from a wishlist (delete it).
+     * This action renders a partial template to be submitted to
+     * the default add-to-cart endpoint, as used on product page.
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response
+     */
+    public function addToCartAction(Request $request)
+    {
+        $cart = $this->get('sylius.context.cart')->getCart();
+
+        $variant =
+            $this->get('sylius.repository.product_variant')->find($request->get('variantId'));
+
+        /** @var OrderItemInterface $orderItem */
+        $orderItem = $this->get('sylius.factory.order_item')
+                          ->createForProduct($variant->getProduct());
+
+        $addToCartCommand =
+            $this->get('sylius.factory.add_to_cart_command')
+                 ->createWithCartAndCartItem($cart, $orderItem);
+
+        $form = $this->get('form.factory')->create(AddToCartType::class, $addToCartCommand, [
+            'product' => $variant->getProduct()
+        ]);
+
+        $form->get('cartItem')->get('quantity')->setData(1);
+
+        if ($form->get('cartItem')->has('variant')) {
+            $form->get('cartItem')->get('variant')->setData($variant);
+        }
+
+        $view = View::create([
+            'product' => $variant->getProduct(),
+            'form'    => $form->createView()
+        ]);
+
+        $view->setTemplate('@WebburzaSyliusWishlist/Frontend/Wishlist/_cartForm.html.twig');
+
+        return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
      */
     public function removeAction(Request $request)
     {
         /** @var WishlistItemInterface $wishlistItem */
-        $wishlistItem = $this->get('webburza.repository.wishlist_item')->find($request->get('id'));
+        $wishlistItem =
+            $this->get('webburza_wishlist.repository.wishlist_item')->find($request->get('id'));
 
         // Check if this item belongs to the current customer trying to remove it
-        if ($wishlistItem->getWishlist()->getCustomer() != $this->getUser()->getCustomer()) {
+        if ($wishlistItem->getWishlist()->getUser() != $this->getUser()) {
             throw $this->createAccessDeniedException();
         }
 
-        /** @var EntityManagerInterface $wishlistItemManager */
-        $wishlistItemManager = $this->get('webburza.manager.wishlist_item');
-
-        // Remove the wishlist item, and flush changes
-        $wishlistItemManager->remove($wishlistItem);
-        $wishlistItemManager->flush();
+        // Remove the item from the repository
+        $this->get('webburza_wishlist.repository.wishlist_item')->remove($wishlistItem);
 
         // If this was an AJAX request, return appropriate response
-        if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(null, 200);
+        if ($request->getRequestFormat() != 'html') {
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
         }
 
         // Set success message
         $this->addFlash(
             'success',
-            'webburza.sylius.wishlist.item_removed'
+            $this->get('translator')->trans('webburza_wishlist.flash.item_removed')
         );
 
-        // If the bundle is configured to work with a single wishlist,
-        // Redirect to the the general route (without a slug)
-        if (false == $this->getParameter('webburza.sylius.wishlist_bundle.multiple')) {
-            return $this->redirectToRoute('webburza_wishlist_frontend_first');
-        }
-
-        // Redirect back to the wishlist
-        return $this->redirectToRoute('webburza_wishlist_frontend_show', [
-            'slug' => $wishlistItem->getWishlist()->getSlug()
-        ]);
+        return $this->redirectToWishlist($wishlistItem->getWishlist());
     }
 
     /**
@@ -76,79 +109,108 @@ class WishlistItemController extends FOSRestController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response
      */
     public function addAction(Request $request)
     {
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = $this->get('doctrine.orm.default_entity_manager');
-
-        // Get the current customer and the wishlist to which the item should be added
-        $customer = $this->getCustomer();
-        $wishlist = $this->resolveWishlist($request, $customer);
-
-        // If no wishlist found, create a new one
-        if (!$wishlist) {
-            $wishlist = $this->get('webburza.factory.wishlist')->createDefault($customer);
-            $entityManager->persist($wishlist);
+        // Get the current user
+        if (!($user = $this->getUser())) {
+            throw new BadRequestHttpException();
         }
+
+        // Get (or create) the wishlist to which the item should be added
+        $wishlist = $this->resolveWishlist($request, $user);
 
         // Get the product variant to be added to wishlist
         $productVariant = $this->resolveProductVariant($request);
 
-        // Create the Wishlist Item
-        /** @var WishlistItemInterface $wishlistItem */
-        $wishlistItem = $this->get('webburza.factory.wishlist_item')->createNew();
+        // Prevent duplicates
+        if ($wishlist->contains($productVariant)) {
+            // Set flash message
+            $this->addFlash(
+                'info',
+                $this->get('translator')->trans('webburza_wishlist.flash.already_on_wishlist')
+            );
 
-        $wishlistItem->setWishlist($wishlist);
+            // Redirect back to the wishlist
+            return $this->redirectToWishlist($wishlist);
+        }
+
+        /** @var WishlistItemInterface $wishlistItem */
+        $wishlistItem = $this->get('webburza_wishlist.factory.wishlist_item')->createNew();
         $wishlistItem->setProductVariant($productVariant);
 
-        $entityManager->persist($wishlistItem);
-
-        /** @var WishlistInterface $wishlist */
         $wishlist->addItem($wishlistItem);
 
-        // Flush changes
-        $entityManager->flush();
+        // Persist the wishlist item
+        $this->get('webburza_wishlist.repository.wishlist_item')->add($wishlistItem);
 
-        // If this was an AJAX request, return appropriate response
-        if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(null, 200);
+        if ($request->getRequestFormat() != 'html') {
+            return new JsonResponse(null, Response::HTTP_CREATED);
         }
 
         // Set success message
         $this->addFlash(
             'success',
-            'webburza.sylius.wishlist.item_added'
+            $this->get('translator')->trans('webburza_wishlist.flash.item_added')
         );
 
-        // If the bundle is configured to work with a single wishlist,
-        // Redirect to the the general route (without a slug)
-        if (false == $this->getParameter('webburza.sylius.wishlist_bundle.multiple')) {
-            return $this->redirectToRoute('webburza_wishlist_frontend_first');
-        }
-
-        // Redirect back to the product
-        return $this->redirectToRoute('webburza_wishlist_frontend_show', [
-            'slug' => $wishlist->getSlug()
-        ]);
+        return $this->redirectToWishlist($wishlist);
     }
 
     /**
-     * Resolve product variant from request,
-     * using Sylius' internal resolver.
+     * Get the requested wishlist, if any,
+     * or the first one for the customer.
      *
      * @param Request $request
+     * @param UserInterface $user
+     *
+     * @return null|WishlistInterface
+     */
+    protected function resolveWishlist(Request $request, UserInterface $user)
+    {
+        // Check if a specific wishlist was requested
+        if ($wishlistId = $request->get('wishlistId')) {
+            $wishlist = $this->get('webburza_wishlist.repository.wishlist')
+                             ->findOneBy([
+                                 'id'   => $wishlistId,
+                                 'user' => $user
+                             ]);
+
+            if (!$wishlist) {
+                throw new BadRequestHttpException();
+            }
+
+            return $wishlist;
+        }
+
+        // If not, get the first wishlist for the customer
+        $wishlist = $this->get('webburza_wishlist.repository.wishlist')->getFirstForUser($user);
+
+        // If no wishlist found, create a new one
+        if (!$wishlist) {
+            $wishlist = $this->get('webburza_wishlist.factory.wishlist')->createDefault($user);
+            $this->get('webburza_wishlist.repository.wishlist')->add($wishlist);
+        }
+
+        return $wishlist;
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return mixed
      * @throws BadRequestHttpException
      */
     protected function resolveProductVariant(Request $request)
     {
-        if ($productVariantId = $request->get('product_variant_id')) {
-            $productVariant =
-                $this->get('sylius.repository.product_variant')->find($productVariantId);
+        if ($productVariantId = $request->get('productVariantId')) {
+            $productVariant = $this->get('sylius.repository.product_variant')
+                                   ->find($productVariantId);
         } else {
-            $productVariant = $this->container->get('webburza.wishlist_cart_resolver')->resolve($request);
+            $productVariant =
+                $this->container->get('webburza_wishlist.resolver.product_variant_cart')
+                                ->resolve($request);
         }
 
         if (!$productVariant) {
@@ -159,44 +221,21 @@ class WishlistItemController extends FOSRestController
     }
 
     /**
-     * Get the customer for the current user.
+     * @param WishlistInterface $wishlist
      *
-     * @return CustomerInterface
-     * @throws BadRequestHttpException
+     * @return RedirectResponse
      */
-    protected function getCustomer()
+    protected function redirectToWishlist(WishlistInterface $wishlist)
     {
-        $customer = $this->getUser() ? $this->getUser()->getCustomer() : null;
-
-        if (!$customer) {
-            throw new BadRequestHttpException();
+        // If the bundle is configured to work with a single wishlist,
+        // Redirect to the the general route (without a slug)
+        if (false == $this->getParameter('webburza_sylius_wishlist.multiple')) {
+            return $this->redirectToRoute('webburza_frontend_wishlist_first');
         }
 
-        return $customer;
-    }
-
-    /**
-     * Get the requested wishlist, if any,
-     * or the first one for the customer.
-     *
-     * @param Request $request
-     * @return WishlistInterface|null
-     */
-    protected function resolveWishlist(Request $request, CustomerInterface $customer)
-    {
-        // Check if a specific wishlist was requested
-        if ($wishlistId = $request->get('wishlist_id')) {
-            $wishlist = $this->get('webburza.repository.wishlist')
-                        ->findForCustomer($customer, $wishlistId);
-
-            if (!$wishlist) {
-                throw new BadRequestHttpException();
-            }
-
-            return $wishlist;
-        }
-
-        // If not, get the first wishlist for the customer
-        return $this->get('webburza.repository.wishlist')->getFirstForCustomer($customer);
+        // Redirect back to the wishlist
+        return $this->redirectToRoute('webburza_frontend_wishlist_show', [
+            'slug' => $wishlist->getSlug()
+        ]);
     }
 }

@@ -3,18 +3,21 @@
 namespace Webburza\Sylius\WishlistBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Sylius\Component\Product\Model\ProductVariantInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Model\TimestampableInterface;
-use Sylius\Component\User\Model\CustomerAwareInterface;
-use Symfony\Component\Validator\Constraints as Assert;
+use Sylius\Component\User\Model\UserAwareInterface;
 
 /**
  * WishlistInterface
  */
-interface WishlistInterface extends ResourceInterface, CustomerAwareInterface, TimestampableInterface
+interface WishlistInterface extends ResourceInterface, UserAwareInterface, TimestampableInterface
 {
+    /**
+     * @return int
+     */
+    public function getId();
+
     /**
      * @return string
      */
@@ -22,6 +25,7 @@ interface WishlistInterface extends ResourceInterface, CustomerAwareInterface, T
 
     /**
      * @param string $title
+     *
      * @return WishlistInterface
      */
     public function setTitle($title);
@@ -33,9 +37,22 @@ interface WishlistInterface extends ResourceInterface, CustomerAwareInterface, T
 
     /**
      * @param string $slug
+     *
      * @return WishlistInterface
      */
     public function setSlug($slug);
+
+    /**
+     * @return string
+     */
+    public function getDescription();
+
+    /**
+     * @param string $description
+     *
+     * @return WishlistInterface
+     */
+    public function setDescription($description);
 
     /**
      * @return boolean
@@ -44,24 +61,32 @@ interface WishlistInterface extends ResourceInterface, CustomerAwareInterface, T
 
     /**
      * @param boolean $public
+     *
      * @return WishlistInterface
      */
     public function setPublic($public);
 
     /**
-     * @return WishlistItemInterface[]
+     * @return ArrayCollection|WishlistItemInterface[]
      */
     public function getItems();
 
     /**
-     * @param ArrayCollection $items
-     * @return WishlistInterface
+     * @return bool
      */
-    public function setItems(ArrayCollection $items);
+    public function hasItems();
 
     /**
      * @param WishlistItemInterface $item
+     *
      * @return WishlistInterface
      */
     public function addItem(WishlistItemInterface $item);
+
+    /**
+     * @param ProductVariantInterface $productVariant
+     *
+     * @return bool
+     */
+    public function contains(ProductVariantInterface $productVariant);
 }

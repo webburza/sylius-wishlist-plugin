@@ -1,65 +1,82 @@
 services:
-    webburza.sylius.wishlist.listener.menu_builder:
-        class: Webburza\Sylius\WishlistBundle\EventListener\MenuBuilderListener
-        arguments: [@translator]
+    webburza_wishlist.listener.menu_builder:
+        class: '%webburza_wishlist.listener.menu_builder.class%'
         tags:
-            - { name: kernel.event_listener, event: sylius.menu_builder.backend.sidebar, method: addBackendMenuItems }
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addBackendMenuItems }
 
-    webburza.sylius.wishlist.listener.front_menu_builder:
-        class: Webburza\Sylius\WishlistBundle\EventListener\FrontendMenuBuilderListener
+    webburza_wishlist.listener.menu_builder_account:
+        class: '%webburza_wishlist.listener.menu_builder_account.class%'
         arguments:
-            - @translator
-            - @security.context
-            - @webburza.repository.wishlist
-            - %webburza.sylius.wishlist_bundle.multiple%
+            - '@translator'
+            - '@security.token_storage'
+            - '@webburza_wishlist.repository.wishlist'
+            - '%webburza_sylius_wishlist.multiple%'
         tags:
-            - { name: kernel.event_listener, event: sylius.menu_builder.frontend.main, method: addFrontendMenuItems }
-            - { name: kernel.event_listener, event: sylius.menu_builder.frontend.account, method: addAccountMenuItems }
+            - { name: kernel.event_listener, event: sylius.menu.shop.account, method: addAccountMenuItems }
 
-    webburza.sylius.wishlist.listener.wishlist:
-        class: Webburza\Sylius\WishlistBundle\EventListener\WishlistListener
-        arguments: [@translator, @service_container]
+    webburza_wishlist.listener.user:
+        class: '%webburza_wishlist.listener.user.class%'
+        arguments: ['@service_container']
         tags:
-            - { name: kernel.event_listener, event: webburza.wishlist.pre_delete, method: preRemove }
+            - { name: 'doctrine.event_listener', event: 'onFlush' }
+            - { name: 'doctrine.event_listener', event: 'postFlush' }
 
-    webburza.sylius.wishlist.listener.customer:
-        class: Webburza\Sylius\WishlistBundle\EventListener\CustomerListener
-        arguments: [@translator, @service_container]
-        tags:
-            - { name: kernel.event_listener, event: sylius.customer.post_create, method: postCreate }
-
-    webburza.factory.wishlist:
-        class: %webburza.factory.wishlist.class%
-        arguments: [%webburza.model.wishlist.class%, @translator, %webburza.sylius.wishlist_bundle.default_public%]
-
-    webburza.front_controller.wishlist:
-        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\WishlistController
-        arguments: [@service_container]
-
-    webburza.front_controller.wishlist_item:
-        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\WishlistItemController
-        arguments: [@service_container]
-
-    webburza.account_controller.wishlist:
-        class: Webburza\Sylius\WishlistBundle\Controller\Frontend\Account\WishlistController
-        arguments: [@service_container]
-
-    webburza.form.type.base_wishlist:
-        class: Webburza\Sylius\WishlistBundle\Form\Type\BaseWishlistType
-        tags:
-            - { name: form.type, alias: webburza_base_wishlist }
-        arguments: [%webburza.model.wishlist.class%]
-
-    wishlist_provider:
-        class: Webburza\Sylius\WishlistBundle\Model\WishlistProvider
+    webburza_wishlist.factory.plain.wishlist:
+        class: '%webburza_wishlist.factory.plain.wishlist.class%'
         arguments:
-            - @security.context
-            - @webburza.repository.wishlist
+            - '%webburza_wishlist.model.wishlist.class%'
 
-    webburza.wishlist_cart_resolver:
-            class: Webburza\Sylius\WishlistBundle\Model\ItemResolver
-            arguments:
-                - @sylius.factory.cart_item
-                - @sylius.repository.product
-                - @form.factory
-                - @sylius.context.channel
+    webburza_wishlist.factory.wishlist:
+        class: '%webburza_wishlist.factory.wishlist.class%'
+        arguments:
+            - '@webburza_wishlist.factory.plain.wishlist'
+            - '@translator'
+            - '%webburza_sylius_wishlist.default_public%'
+
+    webburza_wishlist.controller.front.wishlist:
+        class: '%webburza_wishlist.controller.front.wishlist.class%'
+        arguments: ['@service_container']
+
+    webburza_wishlist.controller.account.wishlist:
+        class: '%webburza_wishlist.controller.account.wishlist.class%'
+        arguments: ['@service_container']
+
+    webburza_wishlist.controller.front.wishlist_item:
+        class: '%webburza_wishlist.controller.front.wishlist_item.class%'
+        arguments: ['@service_container']
+
+    webburza_wishlist.provider.wishlist:
+        class: '%webburza_wishlist.provider.wishlist.class%'
+        arguments:
+            - '@webburza_wishlist.repository.wishlist'
+            - '@security.token_storage'
+
+    webburza_wishlist.form.type.admin_wishlist:
+        class: '%webburza_wishlist.form.type.admin_wishlist.class%'
+        arguments:
+            - '%webburza_wishlist.model.wishlist.class%'
+        tags:
+            - { name: form.type, alias: webburza_admin_wishlist }
+
+    webburza_wishlist.form.type.wishlist:
+        class: '%webburza_wishlist.form.type.wishlist.class%'
+        arguments:
+            - '%webburza_wishlist.model.wishlist.class%'
+        tags:
+            - { name: form.type, alias: webburza_wishlist }
+
+    webburza_wishlist.form.type.user_choice:
+        class: '%webburza_wishlist.form.type.user_choice.class%'
+        arguments:
+            - '@sylius.repository.shop_user'
+        tags:
+            - { name: form.type, alias: webburza_wishlist_user_choice }
+
+    webburza_wishlist.resolver.product_variant_cart:
+        class: '%webburza_wishlist.resolver.product_variant_cart.class%'
+        arguments:
+            - '@sylius.repository.product'
+            - '@sylius.factory.add_to_cart_command'
+            - '@sylius.context.cart'
+            - '@sylius.factory.cart_item'
+            - '@form.factory'
