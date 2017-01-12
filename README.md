@@ -84,7 +84,7 @@ to use single or multiple wishlists per user, which can be public or private.
   which will create initial wishlists for all existing users which do not already have one.
 
   ```bash
-  $ app/console webburza:sylius-wishlist-bundle:create-initial
+  $ bin/console webburza:sylius-wishlist-bundle:create-initial
   ```
 
 ## Integration on shop pages
