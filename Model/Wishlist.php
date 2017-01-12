@@ -38,16 +38,6 @@ class Wishlist implements WishlistInterface
     protected $public = false;
 
     /**
-     * @var \DateTime
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     */
-    protected $updatedAt;
-
-    /**
      * @var ShopUserInterface
      */
     protected $user;
