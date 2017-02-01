@@ -115,7 +115,7 @@ class WishlistItemController extends FOSRestController
     {
         // Get the current user
         if (!($user = $this->getUser())) {
-            throw new BadRequestHttpException();
+            return $this->redirectToRoute('sylius_shop_login');
         }
 
         // Get (or create) the wishlist to which the item should be added
