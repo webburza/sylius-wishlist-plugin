@@ -1,0 +1,46 @@
+webburza_wishlist:
+    ui:
+        wishlist: Pažymetų prekių sąrašas
+        wishlists: Pažymetų prekių sąrašai
+        wishlist_items: Pažymetos prekės
+        manage_wishlists: Valydit pažymėtų prekių sąrašus
+        wishlist_is_empty: Pažymėtų prekių nėra.
+        not_public: Šis pažymėtų prekių sąrašas privatus.
+        clear_wishlist: Išvalyti visas prekes
+        customer: Klientas
+        add_to_cart: Pridėti į krepšelį
+        add_to_wishlist: Pažymėti prekę
+        remove_from_wishlist: Pašalinti
+        controls: Valdymas
+        my_wishlist: Pažymėtų prekių sąrašas
+        my_wishlists: Pažymėtos prekės
+        deleted: Pažymėtų prekių sąrašas ištrintas.
+
+    account:
+        update:
+            header: Redaguoti pažymėtų prekių sąrašą
+            subheader: Atnaujinkite sąrašą
+        create:
+            header: Sukurti pažymėtų prekių sąrašą
+            subheader: Sukurkite naują sąrašą
+        index:
+            header: Pažymetų prekių sąrašai
+            subheader: Valdykite savo sąrašus
+
+    flash:
+        already_on_wishlist: Prekė jau sąraše.
+        cleared: Prekės pašalintos sėkmingai.
+        updated: Sąrašas atnaujintas sėkmingai.
+        item_added: Prekė pažymeta.
+        item_removed: Prekė pašalinta.
+
+    wishlist:
+        default_title: Pažymetų prekių sąrašas
+        label:
+            id: Id
+            title: Pavadinimas
+            description: Aprašymas
+            public: Viešas?
+            created_at: Sukurtas
+            updated_at: Atnaujintas
+            user: Vartotojas
