@@ -2,15 +2,12 @@
 
 namespace Webburza\Sylius\WishlistBundle\Model;
 
-use Gedmo\Timestampable\Traits\Timestampable;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Webburza\Sylius\WishlistBundle\Model\WishlistInterface;
-use Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface;
+use Sylius\Component\Resource\Model\TimestampableTrait;
 
 class WishlistItem implements WishlistItemInterface
 {
-    use Timestampable;
+    use TimestampableTrait;
 
     /**
      * @var integer
