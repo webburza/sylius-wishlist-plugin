@@ -3,14 +3,14 @@
 namespace Webburza\Sylius\WishlistBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Timestampable\Traits\Timestampable;
 use Sylius\Component\Core\Model\ShopUserInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\User\Model\UserInterface;
 
 class Wishlist implements WishlistInterface
 {
-    use Timestampable;
+    use TimestampableTrait;
 
     /**
      * @var integer
@@ -144,9 +144,9 @@ class Wishlist implements WishlistInterface
     }
 
     /**
-     * @return ShopUserInterface
+     * @return UserInterface
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
