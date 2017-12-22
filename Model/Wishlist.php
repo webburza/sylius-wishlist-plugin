@@ -10,8 +10,6 @@ use Sylius\Component\User\Model\UserInterface;
 
 class Wishlist implements WishlistInterface
 {
-    use Timestampable;
-
     /**
      * @var integer
      */
@@ -46,6 +44,16 @@ class Wishlist implements WishlistInterface
      * @var ArrayCollection|WishlistItemInterface[]
      */
     protected $items;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTimeInterface
+     */
+    protected $updatedAt;
 
     /**
      * Wishlist constructor.
@@ -144,19 +152,17 @@ class Wishlist implements WishlistInterface
     }
 
     /**
-     * @return ShopUserInterface
+     * {@inheritdoc}
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
     /**
-     * @param UserInterface $user
-     *
-     * @return Wishlist
+     * {@inheritdoc}
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user)
     {
         $this->user = $user;
 
@@ -206,5 +212,37 @@ class Wishlist implements WishlistInterface
         }
 
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setCreatedAt(?\DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
     }
 }
