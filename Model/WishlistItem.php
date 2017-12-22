@@ -2,14 +2,14 @@
 
 namespace Webburza\Sylius\WishlistBundle\Model;
 
-use Gedmo\Timestampable\Traits\Timestampable;
 use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Model\TimestampableTrait;
 use Symfony\Component\Validator\Constraints as Assert;
-use Webburza\Sylius\WishlistBundle\Model\WishlistInterface;
-use Webburza\Sylius\WishlistBundle\Model\WishlistItemInterface;
 
 class WishlistItem implements WishlistItemInterface
 {
+    use TimestampableTrait;
+
     /**
      * @var integer
      */
@@ -24,16 +24,6 @@ class WishlistItem implements WishlistItemInterface
      * @var ProductVariantInterface
      */
     protected $productVariant;
-
-    /**
-     * @var \DateTimeInterface
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTimeInterface
-     */
-    protected $updatedAt;
 
     /**
      * @return int
@@ -81,37 +71,5 @@ class WishlistItem implements WishlistItemInterface
         $this->productVariant = $productVariant;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(?\DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
     }
 }

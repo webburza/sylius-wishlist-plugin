@@ -3,13 +3,15 @@
 namespace Webburza\Sylius\WishlistBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Gedmo\Timestampable\Traits\Timestampable;
 use Sylius\Component\Core\Model\ShopUserInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Model\TimestampableTrait;
 use Sylius\Component\User\Model\UserInterface;
 
 class Wishlist implements WishlistInterface
 {
+    use TimestampableTrait;
+
     /**
      * @var integer
      */
@@ -44,16 +46,6 @@ class Wishlist implements WishlistInterface
      * @var ArrayCollection|WishlistItemInterface[]
      */
     protected $items;
-
-    /**
-     * @var \DateTimeInterface
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTimeInterface
-     */
-    protected $updatedAt;
 
     /**
      * Wishlist constructor.
@@ -212,37 +204,5 @@ class Wishlist implements WishlistInterface
         }
 
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreatedAt(?\DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
     }
 }
