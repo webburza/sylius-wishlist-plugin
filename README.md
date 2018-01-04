@@ -40,6 +40,7 @@ to use single or multiple wishlists per user, which can be public or private.
   webburza_sylius_wishlist:
       multiple: true           # multiple wishlist mode
       default_public: false    # used for automatically created wishlists
+      account_manageable: true # users can manage their wishlists in their account
   ```
 
   4. register routes in `app/config/routing.yml`
