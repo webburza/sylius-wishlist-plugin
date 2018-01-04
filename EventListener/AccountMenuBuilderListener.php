@@ -30,24 +30,32 @@ class AccountMenuBuilderListener
     protected $multipleWishlistMode;
 
     /**
+     * @var bool
+     */
+    protected $accountManageable;
+
+    /**
      * FrontendMenuBuilderListener constructor.
      *
      * @param TranslatorInterface $translator
      * @param TokenStorageInterface $tokenStorage
      * @param WishlistRepositoryInterface $wishlistRepository
      * @param $multipleWishlistMode
+     * @param $accountManageable
      */
     public function __construct(
         TranslatorInterface $translator,
         TokenStorageInterface $tokenStorage,
         WishlistRepositoryInterface $wishlistRepository,
-        $multipleWishlistMode
+        $multipleWishlistMode,
+        $accountManageable
     ) {
 
         $this->translator = $translator;
         $this->tokenStorage = $tokenStorage;
         $this->wishlistRepository = $wishlistRepository;
         $this->multipleWishlistMode = $multipleWishlistMode;
+        $this->accountManageable = $accountManageable;
     }
 
     /**
@@ -57,6 +65,10 @@ class AccountMenuBuilderListener
      */
     public function addAccountMenuItems(MenuBuilderEvent $event)
     {
+        if (!$this->accountManageable) {
+            return;
+        }
+
         // Get the menu
         $menu = $event->getMenu();
 

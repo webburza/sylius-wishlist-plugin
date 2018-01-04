@@ -19,6 +19,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->booleanNode('multiple')->end()
                 ->booleanNode('default_public')->end()
+                ->booleanNode('account_manageable')->end()
             ->end();
 
         return $treeBuilder;
