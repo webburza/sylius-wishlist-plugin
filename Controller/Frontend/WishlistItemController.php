@@ -45,11 +45,11 @@ class WishlistItemController extends FOSRestController
 
         /** @var OrderItemInterface $orderItem */
         $orderItem = $this->get('sylius.factory.order_item')
-                          ->createForProduct($variant->getProduct());
+            ->createForProduct($variant->getProduct());
 
         $addToCartCommand =
             $this->get('sylius.factory.add_to_cart_command')
-                 ->createWithCartAndCartItem($cart, $orderItem);
+                ->createWithCartAndCartItem($cart, $orderItem);
 
         $form = $this->get('form.factory')->create(AddToCartType::class, $addToCartCommand, [
             'product' => $variant->getProduct()
@@ -82,6 +82,11 @@ class WishlistItemController extends FOSRestController
         $wishlistItem =
             $this->get('webburza_wishlist.repository.wishlist_item')->find($request->get('id'));
 
+        // If this was an AJAX request and wishlistItem is already deleted, return appropriate response
+        if (!$wishlistItem && $request->isXmlHttpRequest()) {
+            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+        }
+
         // Check if this item belongs to the current customer trying to remove it
         if ($wishlistItem->getWishlist()->getUser() != $this->getUser()) {
             throw $this->createAccessDeniedException();
@@ -91,7 +96,7 @@ class WishlistItemController extends FOSRestController
         $this->get('webburza_wishlist.repository.wishlist_item')->remove($wishlistItem);
 
         // If this was an AJAX request, return appropriate response
-        if ($request->getRequestFormat() != 'html') {
+        if ($request->isXmlHttpRequest()) {
             return new JsonResponse(null, Response::HTTP_NO_CONTENT);
         }
 
@@ -126,6 +131,18 @@ class WishlistItemController extends FOSRestController
 
         // Prevent duplicates
         if ($wishlist->contains($productVariant)) {
+            // If this was an AJAX request, return appropriate response
+            if ($request->isXmlHttpRequest()) {
+                $wishlistItem = $this->get('webburza_wishlist.repository.wishlist_item')->findOneBy([
+                    'wishlist' => $wishlist,
+                    'productVariant' => $productVariant
+                ]);
+
+                if ($wishlistItem) {
+                    return new JsonResponse($wishlistItem->getId(), Response::HTTP_CREATED);
+                }
+            }
+
             // Set flash message
             $this->addFlash(
                 'info',
@@ -145,8 +162,9 @@ class WishlistItemController extends FOSRestController
         // Persist the wishlist item
         $this->get('webburza_wishlist.repository.wishlist_item')->add($wishlistItem);
 
-        if ($request->getRequestFormat() != 'html') {
-            return new JsonResponse(null, Response::HTTP_CREATED);
+        // If this was an AJAX request, return appropriate response
+        if ($request->isXmlHttpRequest()) {
+            return new JsonResponse($wishlistItem->getId(), Response::HTTP_CREATED);
         }
 
         // Set success message
@@ -172,10 +190,10 @@ class WishlistItemController extends FOSRestController
         // Check if a specific wishlist was requested
         if ($wishlistId = $request->get('wishlistId')) {
             $wishlist = $this->get('webburza_wishlist.repository.wishlist')
-                             ->findOneBy([
-                                 'id'   => $wishlistId,
-                                 'user' => $user
-                             ]);
+                ->findOneBy([
+                    'id'   => $wishlistId,
+                    'user' => $user
+                ]);
 
             if (!$wishlist) {
                 throw new BadRequestHttpException();
@@ -206,11 +224,11 @@ class WishlistItemController extends FOSRestController
     {
         if ($productVariantId = $request->get('productVariantId')) {
             $productVariant = $this->get('sylius.repository.product_variant')
-                                   ->find($productVariantId);
+                ->find($productVariantId);
         } else {
             $productVariant =
                 $this->container->get('webburza_wishlist.resolver.product_variant_cart')
-                                ->resolve($request);
+                    ->resolve($request);
         }
 
         if (!$productVariant) {
