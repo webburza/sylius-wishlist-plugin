@@ -20,6 +20,7 @@
         "psr-4": { "Webburza\\Sylius\\WishlistBundle\\": "" }
     },
     "require": {
+        "php": "^7.1",
         "sylius/core": "^1.0@dev"
     },
     "require-dev": {
