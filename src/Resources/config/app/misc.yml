@@ -10,7 +10,7 @@ doctrine:
                         is_bundle: true
                         mapping: true
         resolve_target_entities:
-            Sylius\Component\Core\Model\ShopUserInterface: '%sylius.model.shop_user.class%'
+            Sylius\Component\Core\Model\ShopUserInterface: Sylius\Component\Core\Model\ShopUser
 
 twig:
     globals:
