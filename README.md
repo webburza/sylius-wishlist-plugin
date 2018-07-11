@@ -140,7 +140,7 @@ overridden as with any other bundle, by creating translation files in the
 `app/Resources/WebburzaSyliusWishlistPlugin/translations` directory.
 
 To get started, check the bundle's main language file in:
-[Resources/translations/messages.en.yml](Resources/translations/messages.en.yml)
+[src/Resources/translations/messages.en.yml](src/Resources/translations/messages.en.yml)
 
 ## Running and testing the application manually
 
