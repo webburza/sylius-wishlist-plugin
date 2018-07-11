@@ -1,0 +1,15 @@
+services:
+    webburza_sylius_wishlist.factory.decorated.wishlist:
+        class: Webburza\SyliusWishlistPlugin\Factory\WishlistFactory
+        decorates: webburza_sylius_wishlist.factory.wishlist
+        arguments:
+            - '@webburza_sylius_wishlist.factory.decorated.wishlist.inner'
+            - '@translator'
+            - '%webburza_sylius_wishlist.config.default_public%'
+
+    webburza_sylius_wishlist.form.type.wishlist_type:
+        class: Webburza\SyliusWishlistPlugin\Form\Type\WishlistType
+        arguments:
+            - '%webburza_sylius_wishlist.model.wishlist.class%'
+        tags:
+            - { name: form.type }

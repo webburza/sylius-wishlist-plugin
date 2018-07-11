@@ -1,0 +1,29 @@
+webburza_sylius_wishlist_account_wishlist_create:
+    path: /new
+    methods: [GET, POST]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.account.wishlist:createAction
+
+webburza_sylius_wishlist_account_wishlist_edit:
+    path: /{id}/edit
+    methods: [GET]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.account.wishlist:updateAction
+
+webburza_sylius_wishlist_account_wishlist_update:
+    path: /{id}
+    methods: [PUT]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.account.wishlist:updateAction
+
+webburza_sylius_wishlist_account_wishlist_index:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.account.wishlist:indexAction
+
+webburza_sylius_wishlist_account_wishlist_delete:
+    path: /{id}
+    methods: [DELETE]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.account.wishlist:deleteAction

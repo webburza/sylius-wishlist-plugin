@@ -1,0 +1,10 @@
+{% if is_granted('ROLE_USER') %}
+    <a id="wishlistBadge" class="ui circular button" href="{{
+    wishlist_provider.wishlists | length > 1
+    ? path('webburza_sylius_wishlist_account_wishlist_index')
+    : path('webburza_sylius_wishlist_shop_wishlist_first')
+    }}">
+        <i class="star icon"></i>
+        <span>{{ wishlist_provider.itemCount }}</span>
+    </a>
+{% endif %}

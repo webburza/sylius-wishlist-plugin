@@ -1,0 +1,27 @@
+services:
+    webburza_sylius_wishlist.context.admin:
+        class: Tests\Webburza\SyliusWishlistPlugin\Behat\Context\AdminContext
+        arguments:
+            - '@__symfony__.sylius.repository.shop_user'
+            - '@__symfony__.webburza_sylius_wishlist.repository.wishlist'
+            - '@__symfony__.router'
+        tags:
+            - { name: fob.context_service }
+    webburza_sylius_wishlist.context.shop:
+        class: Tests\Webburza\SyliusWishlistPlugin\Behat\Context\ShopContext
+        arguments:
+            - '@__symfony__.sylius.repository.product'
+            - '@__symfony__.router'
+        tags:
+            - { name: fob.context_service }
+    webburza_sylius_wishlist.context.wishlist:
+        class: Tests\Webburza\SyliusWishlistPlugin\Behat\Context\WishlistContext
+        arguments:
+            - '@__symfony__.webburza_sylius_wishlist.factory.decorated.wishlist'
+            - '@__symfony__.webburza_sylius_wishlist.repository.wishlist'
+            - '@__symfony__.sylius.repository.shop_user'
+            - '@__symfony__.sylius.repository.product_variant'
+            - '@__symfony__.webburza_sylius_wishlist.factory.wishlist_item'
+            - '@__symfony__.webburza_sylius_wishlist.provider.wishlist'
+        tags:
+            - { name: fob.context_service }

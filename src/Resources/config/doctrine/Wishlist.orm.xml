@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <mapped-superclass name="Webburza\SyliusWishlistPlugin\Model\Wishlist" table="webburza_wishlist">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="title" type="string"/>
+        <field name="slug" type="string">
+            <gedmo:slug fields="title" unique="false"/>
+        </field>
+
+        <field name="public" type="boolean" nullable="false"/>
+        <field name="description" type="text" length="2048" nullable="true"/>
+
+        <many-to-one field="user" target-entity="Sylius\Component\Core\Model\ShopUserInterface">
+            <join-column name="user_id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+
+        <one-to-many field="items" target-entity="Webburza\SyliusWishlistPlugin\Model\WishlistItemInterface" mapped-by="wishlist" orphan-removal="true">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <field name="createdAt" column="created_at" type="datetime">
+            <gedmo:timestampable on="create"/>
+        </field>
+
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="update"/>
+        </field>
+
+    </mapped-superclass>
+
+</doctrine-mapping>

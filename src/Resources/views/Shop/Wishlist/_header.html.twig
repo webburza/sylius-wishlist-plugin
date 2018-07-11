@@ -1,0 +1,28 @@
+<div class="ui hidden divider"></div>
+<div class="ui two column stackable grid">
+    <div class="column">
+        <h1 class="ui header">
+            <i class="circular star icon"></i>
+            <div class="content">
+                {{ header }}
+
+                {% if not wishlist.public %}
+                    <i class="lock icon"></i>
+                {% endif %}
+
+                <div class="sub header">{{ wishlist.description }}</div>
+            </div>
+        </h1>
+    </div>
+
+    {% if wishlist.hasItems and app.user is same as(wishlist.user) %}
+        <div class="middle aligned column">
+            <form method="POST" action="{{ path('webburza_sylius_wishlist_shop_wishlist_clear', { id: wishlist.id }) }}" >
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token(wishlist.id) }}" />
+                <button type="submit" class="ui right floated basic red button">
+                    <i class="icon remove"></i> {{ 'webburza_sylius_wishlist.ui.clear_wishlist'|trans }}
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>

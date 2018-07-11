@@ -1,0 +1,17 @@
+services:
+    webburza_sylius_wishlist.resolver.wishlist_from_request:
+        class: Webburza\SyliusWishlistPlugin\Resolver\WishlistFromRequestResolver
+        arguments:
+            - '@webburza_sylius_wishlist.provider.logged_in_user'
+            - '@webburza_sylius_wishlist.repository.wishlist'
+            - '@webburza_sylius_wishlist.factory.decorated.wishlist'
+
+    webburza_sylius_wishlist.resolver.product_variant_from_request:
+        class: Webburza\SyliusWishlistPlugin\Resolver\ProductVariantFromRequestResolver
+        arguments:
+            - '@sylius.repository.product_variant'
+            - '@sylius.repository.product'
+            - '@sylius.factory.add_to_cart_command'
+            - '@sylius.context.cart'
+            - '@sylius.custom_factory.order_item'
+            - '@form.factory'

@@ -1,0 +1,38 @@
+<div class="eight wide column">
+    <table class="ui table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="2">{{ 'sylius.ui.details'|trans }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+            <td><strong>{{ 'sylius.ui.title'|trans }}</strong></td>
+            <td>{{ wishlist.title }}</td>
+        </tr>
+        <tr>
+            <td><strong>{{ 'sylius.ui.description'|trans }}</strong></td>
+            <td>{{ wishlist.description }}</td>
+        </tr>
+        <tr>
+            <td><strong>{{ 'sylius.ui.customer'|trans }}</strong></td>
+            <td>
+                <a href="{{ path('sylius_admin_customer_show', {id: wishlist.user.customer.id}) }}">{{ wishlist.user.customer.email }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td><strong>{{ 'webburza_sylius_wishlist.ui.public'|trans }}</strong></td>
+            <td>{% include '@SyliusUi/Grid/Field/yesNo.html.twig' with {data: wishlist.public} %}</td>
+        </tr>
+        <tr>
+            <td><strong>{{ 'sylius.ui.created_at' | trans }}</strong></td>
+            <td>{{ wishlist.createdAt | format_date }}</td>
+        </tr>
+        <tr>
+            <td><strong>{{ 'webburza_sylius_wishlist.ui.updated_at' | trans }}</strong></td>
+            <td>{{ wishlist.updatedAt ? (wishlist.updatedAt | format_date) : '' }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

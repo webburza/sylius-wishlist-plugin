@@ -1,0 +1,40 @@
+{% import '@SyliusUi/Macro/messages.html.twig' as messages %}
+
+<div class="eight wide column">
+    <table class="ui table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="2">{{ 'webburza_sylius_wishlist.ui.wishlist_items'|trans }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% if wishlist.hasItems %}
+            {% for item in wishlist.items %}
+                <tr>
+                    <td>
+                        <a href="{{ path('sylius_shop_product_show', {slug: item.productVariant.product.slug}) }}">
+                            {{ item.productVariant.product.name }}
+                        </a>
+                        <br>
+                        <small>
+                            {% if item.productVariant.optionValues is not empty %}
+                                {% for optionValue in item.productVariant.optionValues %}
+                                    {{ optionValue.value }}{{ not loop.last ? ', ' : '' }}
+                                {% endfor %}
+                            {% elseif item.productVariant.name is not empty %}
+                                {{ item.productVariant.name }}
+                            {% endif %}
+                        </small>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td>{{ messages.info('webburza_sylius_wishlist.ui.wishlist_is_empty') }}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+

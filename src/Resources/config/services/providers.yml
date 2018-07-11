@@ -1,0 +1,11 @@
+services:
+    webburza_sylius_wishlist.provider.logged_in_user:
+        class: Webburza\SyliusWishlistPlugin\Provider\LoggedInUserProvider
+        arguments:
+            - '@security.token_storage'
+
+    webburza_sylius_wishlist.provider.wishlist:
+        class: Webburza\SyliusWishlistPlugin\Provider\WishlistProvider
+        arguments:
+            - '@webburza_sylius_wishlist.repository.wishlist'
+            - '@webburza_sylius_wishlist.provider.logged_in_user'

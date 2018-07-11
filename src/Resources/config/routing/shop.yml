@@ -1,0 +1,38 @@
+# Show the first wishlist for the current user, only if the bundle
+# is configured for a single wishlist per user, otherwise redirect
+
+webburza_sylius_wishlist_shop_wishlist_first:
+    path: /
+    methods: [GET]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist:firstAction
+
+webburza_sylius_wishlist_shop_wishlist_clear:
+    path: /{id}/clear
+    methods: [POST]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist:clearAction
+
+webburza_sylius_wishlist_shop_wishlist_add_item:
+    path: /item
+    methods: [POST]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist_item:addAction
+
+webburza_sylius_wishlist_shop_wishlist_remove_item:
+    path: /item/{id}
+    methods: [DELETE]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist_item:removeAction
+
+webburza_sylius_wishlist_shop_add_to_cart:
+    path: /item/add-to-cart
+    methods: [GET]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist_item:addToCartAction
+
+webburza_sylius_wishlist_shop_wishlist_show:
+    path: /{id}/{slug}
+    methods: [GET]
+    defaults:
+        _controller: webburza_sylius_wishlist.controller.shop.wishlist:showAction

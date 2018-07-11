@@ -1,0 +1,63 @@
+sylius_grid:
+    grids:
+        webburza_sylius_wishlist_admin_wishlist:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: '%webburza_sylius_wishlist.model.wishlist.class%'
+                    repository:
+                        method: createListQueryBuilder
+            fields:
+                title:
+                    type: string
+                    label: sylius.ui.title
+                    sortable: ~
+                user:
+                    type: twig
+                    label: sylius.ui.customer
+                    sortable: customer.email
+                    options:
+                        template: "@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Grid/_customer.html.twig"
+                public:
+                    type: twig
+                    label: webburza_sylius_wishlist.ui.public
+                    sortable: ~
+                    options:
+                        template: SyliusUiBundle:Grid/Field:yesNo.html.twig
+                item_count:
+                    type: twig
+                    label: webburza_sylius_wishlist.ui.item_count
+                    path: .
+                    sortable: ~
+                    options:
+                        template: "@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Grid/_count.html.twig"
+                createdAt:
+                    type: datetime
+                    label: sylius.ui.created_at
+                    sortable: ~
+                    options:
+                        format: d-m-Y H:i:s
+                updatedAt:
+                    type: datetime
+                    label: webburza_sylius_wishlist.ui.updated_at
+                    sortable: ~
+                    options:
+                        format: d-m-Y H:i:s
+            actions:
+                item:
+                    show:
+                        type: show
+                    delete:
+                        type: delete
+            filters:
+                search:
+                    type: string
+                    label: sylius.ui.search
+                    options:
+                        fields: [title, customer.email]
+                public:
+                    type: boolean
+                    label: webburza_sylius_wishlist.ui.public
+            sorting:
+                createdAt: desc
+

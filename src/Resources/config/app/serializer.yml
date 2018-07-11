@@ -1,0 +1,6 @@
+jms_serializer:
+    metadata:
+        directories:
+            webburza_sylius_wishlist:
+                namespace_prefix: "Webburza\\SyliusWishlistPlugin\\Model"
+                path: "@WebburzaSyliusWishlistPlugin/Resources/config/serializer"

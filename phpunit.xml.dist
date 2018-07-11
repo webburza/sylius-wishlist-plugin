@@ -1,31 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.2/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.6/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         forceCoversAnnotation="true"
-         convertErrorsToExceptions="true"
-         convertWarningsToExceptions="true"
-         checkForUnintentionallyCoveredCode="true"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutChangesToGlobalState="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTestSize="true"
-         bootstrap="Tests/bootstrap.php">
-
+         bootstrap="vendor/autoload.php">
     <testsuites>
-        <testsuite>
-            <directory>./Tests</directory>
+        <testsuite name="AcmeSyliusExamplePlugin Test Suite">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
-            <directory suffix=".php">./</directory>
-            <exclude>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+    <php>
+        <server name="KERNEL_CLASS_PATH" value="/tests/Application/AppKernel.php" />
+        <server name="IS_DOCTRINE_ORM_SUPPORTED" value="true" />
+    </php>
 </phpunit>

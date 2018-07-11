@@ -1,0 +1,18 @@
+{% extends 'SyliusAdminBundle::layout.html.twig' %}
+
+{% block title %}{{ wishlist.title ~ ' (' ~ wishlist.user.customer.email ~ ')' }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui stackable two column grid">
+        {% include '@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Show/_header.html.twig' %}
+    </div>
+
+    <div class="ui divider"></div>
+
+    {% include '@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Show/_breadcrumb.html.twig' %}
+
+    <div class="ui stackable grid">
+        {% include '@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Show/_details.html.twig' %}
+        {% include '@WebburzaSyliusWishlistPlugin/Resources/views/Admin/Show/_items.html.twig' %}
+    </div>
+{% endblock %}

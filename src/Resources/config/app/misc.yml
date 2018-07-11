@@ -1,0 +1,17 @@
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                mappings:
+                    WebburzaSyliusWishlistPlugin:
+                        type: xml
+                        prefix: Webburza\SyliusWishlistPlugin\Model
+                        dir: 'Resources/config/doctrine'
+                        is_bundle: true
+                        mapping: true
+        resolve_target_entities:
+            Sylius\Component\Core\Model\ShopUserInterface: '%sylius.model.shop_user.class%'
+
+twig:
+    globals:
+        wishlist_provider: '@webburza_sylius_wishlist.provider.wishlist'

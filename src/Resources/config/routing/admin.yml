@@ -1,0 +1,14 @@
+webburza_sylius_wishlist_admin_wishlist:
+    resource: |
+        alias: webburza_sylius_wishlist.wishlist
+        section: admin
+        templates: WebburzaSyliusWishlistPlugin:Admin
+        except: ['create', 'update']
+        grid: webburza_sylius_wishlist_admin_wishlist
+        vars:
+            all:
+                subheader: webburza_sylius_wishlist.ui.manage_wishlists
+            index:
+                icon: 'file star'
+    type: sylius.resource
+    prefix: /admin

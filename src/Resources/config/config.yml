@@ -1,0 +1,5 @@
+imports:
+    - { resource: "app/resources.yml" }
+    - { resource: "app/grids.yml" }
+    - { resource: "app/misc.yml" }
+    - { resource: "app/serializer.yml" }

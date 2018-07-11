@@ -1,5 +1,0 @@
-{% if data.public %}
-    <a href="{{ path('webburza_frontend_wishlist_show', { slug: data.slug }) }}">{{ data.title }}</a>
-{% else %}
-    {{ data.title }}
-{% endif %}

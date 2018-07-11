@@ -1,0 +1,23 @@
+{{ form_start(form, {'action': path('sylius_shop_ajax_cart_add_item', {'productId': product.id}), 'attr': {'id': 'sylius-product-adding-to-cart', 'class': 'ui loadable form', 'novalidate': 'novalidate', 'data-redirect': path('sylius_shop_cart_summary')}}) }}
+
+<div style="display: none;">
+    {% if not product.simple %}
+        {% if product.variantSelectionMethodChoice %}
+            {% include '@SyliusShop/Product/Show/_variants.html.twig' %}
+        {% else %}
+            {% for option_form in form.cartItem.variant %}
+                {{ form_widget(option_form, { 'attr': { 'data-option': option_form.vars.name } }) }}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+
+    {{ form_row(form.cartItem.quantity) }}
+</div>
+
+<button type="submit" class="ui icon labeled button primary">
+    <i class="cart icon"></i>
+    {{ 'sylius.ui.add_to_cart'|trans }}
+</button>
+
+{{ form_row(form._token) }}
+{{ form_end(form, {'render_rest': false}) }}

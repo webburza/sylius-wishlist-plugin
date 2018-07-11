@@ -1,0 +1,23 @@
+Webburza\SyliusWishlistPlugin\Model\Wishlist:
+    exclusion_policy: ALL
+    xml_root_name: webburza-wishlist
+    properties:
+        id:
+            expose: true
+            type: integer
+            xml_attribute: true
+        title:
+            expose: true
+            type: string
+        slug:
+            expose: true
+            type: string
+        description:
+            expose: true
+            type: string
+        public:
+            expose: true
+            type: bool
+        items:
+            expose: true
+            type: array

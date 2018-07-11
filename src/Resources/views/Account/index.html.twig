@@ -1,0 +1,67 @@
+{% extends '@SyliusShop/Account/layout.html.twig' %}
+
+{% import 'SyliusUiBundle:Macro:buttons.html.twig' as buttons %}
+{% import 'SyliusUiBundle:Macro:messages.html.twig' as messages %}
+
+{% block breadcrumb %}
+    <div class="ui breadcrumb">
+        <a href="{{ path('sylius_shop_homepage') }}" class="section">{{ 'sylius.ui.home'|trans }}</a>
+        <div class="divider"> / </div>
+        <a href="{{ path('sylius_shop_account_dashboard') }}" class="section">{{ 'sylius.ui.my_account'|trans }}</a>
+        <div class="divider"> / </div>
+        <div class="active section">{{ 'webburza_sylius_wishlist.account.index.header'|trans }}</div>
+    </div>
+{% endblock %}
+
+{% block subcontent %}
+    <div class="ui stackable two column grid">
+        <div class="column">
+            <h1 class="ui header">
+                {{ 'webburza_sylius_wishlist.account.index.header'|trans }}
+                <div class="sub header">{{ 'webburza_sylius_wishlist.account.index.subheader'|trans }}</div>
+            </h1>
+        </div>
+        <div class="right aligned column">
+            {{ buttons.create(path('webburza_sylius_wishlist_account_wishlist_create')) }}
+        </div>
+    </div>
+
+    <div class="ui segment">
+        {% if wishlists|length > 0 %}
+            <table class="ui stackable celled table">
+                <thead>
+                <tr>
+                    <th>{{ 'sylius.ui.title' | trans }}</th>
+                    <th>{{ 'webburza_sylius_wishlist.ui.public' | trans }}</th>
+                    <th>{{ 'sylius.ui.actions' | trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for wishlist in wishlists %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('webburza_sylius_wishlist_shop_wishlist_show', {
+                                    'id': wishlist.id,
+                                    'slug': wishlist.slug
+                                }) }}">
+                                    {{ wishlist.title }}
+                                </a>
+                            </td>
+                            <td class="two wide">
+                                {% include '@SyliusUi/Grid/Field/yesNo.html.twig' with { data: wishlist.public } %}
+                            </td>
+                            <td class="five wide">
+                                <div class="ui buttons">
+                                    {{ buttons.edit(path('webburza_sylius_wishlist_account_wishlist_edit', { id: wishlist.id })) }}
+                                    {{ buttons.delete(path('webburza_sylius_wishlist_account_wishlist_delete', { id: wishlist.id })) }}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            {{ messages.info('sylius.ui.no_results_to_display'|trans) }}
+        {% endif %}
+    </div>
+{% endblock %}

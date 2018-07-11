@@ -1,0 +1,38 @@
+webburza_sylius_wishlist:
+    ui:
+        wishlist: Wishlist
+        wishlists: Wishlists
+        wishlist_items: Wishlist items
+        manage_wishlists: Manage wishlists
+        wishlist_is_empty: This wishlist has no items.
+        not_public: This wishlist is private.
+        clear_wishlist: Clear all items
+        add_to_wishlist: Add to wishlist
+        controls: Controls
+        account_wishlist: Wishlist
+        account_wishlists: Wishlists
+        account_manage_wishlists: Manage your wishlists
+        deleted: Wishlist deleted successfully.
+        default_title: Wishlist
+        item_count: Item count
+        description: Description
+        public: Public?
+        updated_at: Updated At
+
+    account:
+        update:
+            header: Edit wishlist
+            subheader: Update wishlist details
+        create:
+            header: Create wishlist
+            subheader: Create a new wishlist
+        index:
+            header: Wishlists
+            subheader: Manage your wishlists
+
+    flash:
+        already_on_wishlist: Item already on wishlist.
+        cleared: Items cleared successfully.
+        updated: Wishlist updated successfully.
+        item_added: Item added to wishlist.
+        item_removed: Item removed successfully.

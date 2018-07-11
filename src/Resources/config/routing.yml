@@ -1,0 +1,10 @@
+webburza_sylius_wishlist_admin:
+    resource: routing/admin.yml
+
+webburza_sylius_wishlist_shop:
+    resource: routing/shop.yml
+    prefix: /wishlist
+
+webburza_sylius_wishlist_account:
+    resource: routing/account.yml
+    prefix: /account/wishlists

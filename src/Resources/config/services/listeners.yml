@@ -1,0 +1,15 @@
+services:
+    webburza_sylius_wishlist.event_listener.admin_menu:
+        class: Webburza\SyliusWishlistPlugin\EventListener\AdminMenuListener
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.admin.main, method: addMenuItems }
+
+    webburza_sylius_wishlist.event_listener.account_menu:
+        class: Webburza\SyliusWishlistPlugin\EventListener\AccountMenuListener
+        arguments:
+            - '@translator'
+            - '@webburza_sylius_wishlist.provider.logged_in_user'
+            - '@webburza_sylius_wishlist.repository.wishlist'
+            - '%webburza_sylius_wishlist.config.multiple%'
+        tags:
+            - { name: kernel.event_listener, event: sylius.menu.shop.account, method: addMenuItems }

@@ -1,0 +1,24 @@
+default:
+    suites:
+        managing_wishlists_in_admin:
+            filters:
+                tags: "@managing_wishlists_in_admin"
+            contexts_services:
+                - webburza_sylius_wishlist.context.admin
+                - sylius.behat.context.setup.admin_security
+                - sylius.behat.context.ui.admin.dashboard
+                - sylius.behat.context.setup.channel
+                - sylius.behat.context.hook.doctrine_orm
+                - sylius.behat.context.setup.customer
+                - webburza_sylius_wishlist.context.wishlist
+        managing_wishlists_in_shop:
+            filters:
+                tags: "@managing_wishlists_in_shop"
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - webburza_sylius_wishlist.context.shop
+                - sylius.behat.context.setup.channel
+                - sylius.behat.context.setup.customer
+                - webburza_sylius_wishlist.context.wishlist
+                - sylius.behat.context.setup.shop_security
+                - sylius.behat.context.setup.product

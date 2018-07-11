@@ -1,0 +1,26 @@
+{% if is_granted('ROLE_USER') %}
+    {% if wishlist_provider.wishlists | length > 1 %}
+        <div class="ui divider"></div>
+        <div class="required field">
+            <label for="wishlistId" class="required">{{ 'webburza_sylius_wishlist.ui.wishlist' | trans }}</label>
+            <select id="wishlistId" name="wishlistId" class="form-control">
+                {% for wishlist in wishlist_provider.wishlists %}
+                    <option value="{{ wishlist.id }}">{{ wishlist.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+
+    <button type="submit" class="ui icon labeled button"
+            onclick="swapActionAttribute()"
+            formaction="{{ path('webburza_sylius_wishlist_shop_wishlist_add_item', { 'productId': product.id }) }}"
+    >
+        <i class="star icon"></i> {{ 'webburza_sylius_wishlist.ui.add_to_wishlist'|trans }}
+    </button>
+
+    <script>
+        function swapActionAttribute(elem) {
+            $('#sylius-product-adding-to-cart').off('submit');
+        }
+    </script>
+{% endif %}

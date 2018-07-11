@@ -1,0 +1,12 @@
+sylius_resource:
+    resources:
+        webburza_sylius_wishlist.wishlist:
+            classes:
+                model: Webburza\SyliusWishlistPlugin\Model\Wishlist
+                interface: Webburza\SyliusWishlistPlugin\Model\WishlistInterface
+                repository: Webburza\SyliusWishlistPlugin\Doctrine\ORM\WishlistRepository
+
+        webburza_sylius_wishlist.wishlist_item:
+            classes:
+                model: Webburza\SyliusWishlistPlugin\Model\WishlistItem
+                interface: Webburza\SyliusWishlistPlugin\Model\WishlistItemInterface

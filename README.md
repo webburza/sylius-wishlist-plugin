@@ -1,4 +1,4 @@
-# Sylius Wishlist Bundle
+# Sylius Wishlist Plugin
 
 This bundle adds wishlist functionality to Sylius e-commerce platform. It can be configured
 to use single or multiple wishlists per user, which can be public or private.
@@ -10,7 +10,7 @@ to use single or multiple wishlists per user, which can be public or private.
   1. require the bundle with Composer:
 
   ```bash
-  $ composer require webburza/sylius-wishlist-bundle
+  $ composer require webburza/sylius-wishlist-plugin
   ```
 
   2. enable the bundle in `app/AppKernel.php`:
@@ -20,7 +20,7 @@ to use single or multiple wishlists per user, which can be public or private.
   {
     $bundles = [
       // ...
-      new \Webburza\Sylius\WishlistBundle\WebburzaSyliusWishlistBundle(),
+      new \Webburza\SyliusWishlistPlugin\WebburzaSyliusWishlistPlugin(),
       // ...
     ];
   }
@@ -30,7 +30,7 @@ to use single or multiple wishlists per user, which can be public or private.
 
   ```yaml
   imports:
-      - { resource: "@WebburzaSyliusWishlistBundle/Resources/config/config.yml" }
+      - { resource: "@WebburzaSyliusWishlistPlugin/Resources/config/config.yml" }
   ```
 
   Among other things, this provides configuration entries which can then be overriden
@@ -45,21 +45,9 @@ to use single or multiple wishlists per user, which can be public or private.
   4. register routes in `app/config/routing.yml`
 
   ```yaml
-  webburza_wishlist:
-    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routing.yml"
-  
-  webburza_wishlist_front:
-    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingFront.yml"
-    prefix: /wishlist
-  
-  webburza_wishlist_account:
-    resource: "@WebburzaSyliusWishlistBundle/Resources/config/routingAccount.yml"
-    prefix: /account/wishlists
+  webburza_sylius_wishlist:
+    resource: "@WebburzaSyliusWishlistPlugin/Resources/config/routing.yml"
   ```
-
-  As you can see, there are three groups of routes, the main resource (administration)
-  routes, frontend routes, and user account routes where the user can manage their
-  wishlist(s), create new ones, mark them public/private, etc...
 
   5. The bundle should now be fully integrated, but it still requires
   database tables to be created. For this, we recommend using migrations.
@@ -77,15 +65,7 @@ to use single or multiple wishlists per user, which can be public or private.
 
   6. If you're integrating this bundle into an existing project, your existing
   users will not have any wishlists associated. This is not an issue as wishlists
-  are automatically created when needed. All new users will automatically have
-  a wishlist created for them from the start.
-  
-  If you want to make sure all your users have wishlists, you can run a command
-  which will create initial wishlists for all existing users which do not already have one.
-
-  ```bash
-  $ bin/console webburza:sylius-wishlist-bundle:create-initial
-  ```
+  are automatically created when needed.
 
 ## Integration on shop pages
 
@@ -101,7 +81,7 @@ this implementation is up to you. It can be done in two ways.
   next to the 'Add to cart' button in the existing form.
 
   Open the template containing your 'add to cart' form, most likely in:
-  `app/Resources/SyliusShopBundle/Resources/views/Product/Show/_addToCart.html.twig`
+  `app/Resources/SyliusShopBundle/views/Product/Show/_addToCart.html.twig`
 
   Find the 'add to cart' button, by default:
   ```
@@ -110,7 +90,7 @@ this implementation is up to you. It can be done in two ways.
 
   And under it, add the following line.
   ```
-  {% include '@WebburzaSyliusWishlist/Frontend/Shop/_addToWishlist.html.twig' %}
+  {% include '@WebburzaSyliusWishlistPlugin/Shop/Misc/_addToWishlist.html.twig' %}
   ```
   
   This will include the 'Add to Wishlist' button, and all required functionality.
@@ -126,7 +106,7 @@ this implementation is up to you. It can be done in two ways.
 
   ```
   $.ajax({
-      url: '/wishlist/item/',
+      url: '/wishlist/item',
       type: 'POST',
       data: {
           productVariantId: 123,
@@ -147,25 +127,78 @@ You might also want to feature a badge in your header which links to the wishlis
   and shows the current number of items added, similar to the existing cart badge.
   
 To do this, just add this line to the bottom of the same file
-`app/Resources/SyliusShopBundle/Resources/views/Cart/_widget.html.twig`
+`app/Resources/SyliusShopBundle/views/Cart/_widget.html.twig`
 
 ```
-{% include '@WebburzaSyliusWishlist/Frontend/Shop/_badge.html.twig' %}
+{% include '@WebburzaSyliusWishlistPlugin/Shop/Misc/_badge.html.twig' %}
 ```
   
 ## Translations and naming
 
 The bundle has multilingual support, and language files can be
 overridden as with any other bundle, by creating translation files in the
-`app/Resources/WebburzaSyliusWishlistBundle/translations` directory.
+`app/Resources/WebburzaSyliusWishlistPlugin/translations` directory.
 
 To get started, check the bundle's main language file in:
 [Resources/translations/messages.en.yml](Resources/translations/messages.en.yml)
 
+## Running and testing the application manually
+
+- Initial installation and fixtures:
+
+    ```bash
+    $ composer install
+    
+    $ (cd tests/Application && yarn install)
+    $ (cd tests/Application && yarn run gulp)
+    $ (cd tests/Application && bin/console assets:install web -e dev)
+    
+    $ (cd tests/Application && bin/console doctrine:database:create -e dev)
+    $ (cd tests/Application && bin/console doctrine:schema:create -e dev)
+    $ (cd tests/Application && bin/console sylius:fixtures:load -e dev)
+    ```
+    
+- Start application:
+
+    ```bash
+    $ (cd tests/Application && bin/console server:start -d web -e dev)
+    ```
+    
+- Stop application:
+
+    ```bash
+    $ (cd tests/Application && bin/console server:stop)
+    ```
+
+## Automated tests
+
+  - Behat (non-Javascript scenarios)
+
+    ```bash
+    $ bin/behat --tags="~@javascript"
+    ```
+
+  - Behat (with Javascript scenarios)
+ 
+    1. Download [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/)
+    
+    2. Run Selenium server with previously downloaded Chromedriver:
+    
+        ```bash
+        $ bin/selenium-server-standalone -Dwebdriver.chrome.driver=/path/to/chromedriver
+        ```
+    3. Run test application's webserver on `localhost:8080`:
+    
+        ```bash
+        $ (cd tests/Application && bin/console server:run 127.0.0.1:8080 -d web -e test)
+        ```
+    
+    4. Run Behat:
+    
+        ```bash
+        $ bin/behat
+        ```
+
 ## License
 
 This bundle is available under the [MIT license](LICENSE).
-
-## To-do
-
-- Tests
